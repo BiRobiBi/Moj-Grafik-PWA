@@ -1,5 +1,5 @@
-/* Mój Grafik i Urlopy PWA — service worker v1.7.3 */
-const CACHE = 'moj-grafik-pwa-v1.7.3';
+/* Mój Grafik i Urlopy PWA — service worker v1.7.5 */
+const CACHE = 'moj-grafik-pwa-v1.7.5';
 const PREFIX = 'moj-grafik-pwa-';
 const APP_FILES = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png'];
 const OFFLINE_PAGE = new URL('./index.html', self.registration.scope).href;
