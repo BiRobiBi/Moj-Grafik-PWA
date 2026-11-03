@@ -1,0 +1,735 @@
+<!doctype html>
+<html lang="pl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#172a4a"><title>Mój Grafik i Urlopy — v1.6.23</title><style>
+:root{font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:#192b45;background:#f4f6fa}*{box-sizing:border-box}body{margin:0}header{background:#172a4a;color:white;padding:18px 20px}header .wrap{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}h1{font-size:23px;margin:0}header small{color:#cbd6e9}main{max-width:1050px;margin:20px auto;padding:0 14px 32px}.panel{background:white;border:1px solid #e0e5ef;border-radius:15px;padding:18px;margin-bottom:15px;box-shadow:0 2px 8px #12203c08}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.stat{padding:16px;border-radius:12px;background:#eef3fb}.stat strong{font-size:27px;display:block}.stat span{font-size:13px;color:#52627a}.toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}.toolbar h2{margin:0;font-size:32px;font-weight:750;line-height:1.2}.actions{display:flex;gap:8px;flex-wrap:wrap}button,.btn{border:1px solid #cbd5e3;background:white;color:#172a4a;border-radius:9px;padding:10px 13px;font-size:14px;cursor:pointer}button.primary{background:#244d90;color:white;border-color:#244d90}button:hover{filter:brightness(.96)}.calendar{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;margin-top:16px}.weekday{text-align:center;color:#61718a;font-size:13px;font-weight:650;padding:8px 0}.day{border:1px solid #dce3ed;border-radius:10px;background:#fff;min-height:92px;text-align:left;padding:8px;display:flex;flex-direction:column;gap:5px;min-width:0}.day.blank{border:none;background:transparent;cursor:default}.day .num{font-weight:700}.day .note{font-size:11px;overflow-wrap:anywhere;line-height:1.2}.day.work{background:#edf5ff}.day.vacation{background:#a9e6b7;border-color:#4ea56b;color:#163e28}.day.demand{background:#def5ed}.day.sick{background:#fff0d9}.day.other{background:#f2eaff}.day.parental{background:#f9e5f0}.day.special{background:#e6f4f5}.day.holiday{outline:2px solid #dfb9bd;outline-offset:-2px}.day.today .num{border-radius:30px;background:#244d90;color:white;padding:3px 7px;width:max-content}.day small{font-size:10px;color:#64748b}.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;margin-top:14px;color:#52627a}.dot{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:4px}.muted{color:#66758a;font-size:13px}.formgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}label{font-size:13px;font-weight:600;display:flex;flex-direction:column;gap:5px}input,select{font:inherit;padding:10px;border:1px solid #c9d3e2;border-radius:8px;min-width:0;width:100%;background:white;color:#192b45}.checkdays{display:flex;gap:8px;flex-wrap:wrap}.checkdays label{flex-direction:row;align-items:center;font-weight:400}.checkdays input{width:auto}dialog{border:0;border-radius:16px;max-width:470px;width:calc(100% - 24px);padding:22px;box-shadow:0 18px 80px #0c1a3466}dialog::backdrop{background:#091a3480}dialog h2{margin-top:0}.dialog-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:20px}.hidden{display:none!important}.message{padding:12px;background:#fff7dd;border-radius:10px;font-size:13px;margin-top:12px}.editor-active{outline:3px solid #244d90;outline-offset:2px}.feedback{padding:12px;border-radius:9px;background:#e5f6e9;margin:12px 0;font-weight:600}.foot{font-size:12px;color:#66758a;text-align:center}.right{margin-left:auto}@media(max-width:650px){h1{font-size:20px}.stats{grid-template-columns:repeat(3,1fr);gap:6px}.stat{padding:11px 7px}.stat strong{font-size:22px}.stat span{font-size:11px}.panel{padding:12px}.calendar{gap:3px}.day{min-height:76px;padding:4px;border-radius:7px}.day .note{font-size:9px}.day small{font-size:9px}.formgrid{grid-template-columns:1fr}}
+.copy-options{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.copy-options button[aria-pressed="true"]{background:#244d90;color:#fff}.copy-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px;margin:12px 0}.copy-grid label{display:flex;align-items:center;justify-content:center;gap:4px;border:1px solid #dce3ed;border-radius:8px;padding:8px 2px;font-size:12px;flex-direction:column}.copy-grid input{width:auto}.copy-preview{max-height:220px;overflow:auto;background:#eef3fb;border-radius:9px;padding:10px;font-size:13px;white-space:pre-line}.copy-note{font-size:12px;color:#66758a}#copyDialog{max-width:650px}#copyDialog .dialog-actions{flex-wrap:wrap}@media(max-width:650px){.copy-grid{gap:2px}.copy-grid label{font-size:10px;padding:6px 1px}}
+
+/* Wyrównanie dni tygodnia w oknach grafiku cyklicznego i edycji zbiorczej */
+.weekchecks{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;margin:10px 0 16px}
+.weekchecks label{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;text-align:center;font-size:12px;font-weight:600;padding:10px 2px;border:1px solid #dce3ed;border-radius:9px;min-width:0;cursor:pointer;background:#f8faff}
+.weekchecks input[type="checkbox"]{width:18px;height:18px;min-width:18px;margin:0;padding:0;accent-color:#244d90;cursor:pointer}
+@media(max-width:450px){.weekchecks{gap:3px}.weekchecks label{font-size:11px;padding:8px 1px}}
+.app-tabs{display:flex;gap:8px;margin-bottom:16px}.app-tabs button{flex:1;font-weight:700}.app-tabs button.active{background:#244d90;color:#fff;border-color:#244d90}#analysesTab>h2{margin:4px 0 6px}@media(max-width:650px){.app-tabs button{padding:12px 8px}}
+
+/* v1.6.9 — delikatnie większa czcionka wyłącznie w kalendarzu */
+.calendar .weekday{font-size:15px}
+.calendar .day .num{font-size:17px}
+.calendar .day .note{font-size:13px;line-height:1.25}
+.calendar .day small{font-size:11px;line-height:1.2}
+@media(max-width:650px){
+ .calendar .weekday{font-size:13px}
+ .calendar .day .num{font-size:15px}
+ .calendar .day .note{font-size:10px;line-height:1.2}
+ .calendar .day small{font-size:10px}
+}
+/* v1.6.10 — centrowanie zawartości pól kalendarza */
+.calendar .day:not(.blank){align-items:center;text-align:center;justify-content:center}
+.calendar .day .num,.calendar .day .note,.calendar .day small{max-width:100%;text-align:center}
+.calendar .day.today .num{margin-left:auto;margin-right:auto}
+/* v1.6.39 — wyraźna ramka wokół całego dzisiejszego dnia, bez zmiany koloru statusu */
+.calendar .day.today:not(.blank){border:4px solid #1c4d9a!important;box-shadow:inset 0 0 0 1px #ffffffa6;position:relative;z-index:1}
+:root[data-theme="dark"] .calendar .day.today:not(.blank){border-color:#8bbaff!important;box-shadow:inset 0 0 0 1px #101827}
+/* v1.6.11 — wyśrodkowanie tekstu we wszystkich kafelkach podsumowań */
+.stats .stat{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:4px;min-width:0}
+.stats .stat strong,.stats .stat span{display:block;width:100%;text-align:center;overflow-wrap:break-word}
+
+/* v1.6.17 — jeden wyróżniony bilans zamiast dwóch identycznych liczników */
+.leave-details{grid-template-columns:repeat(6,minmax(0,1fr));margin-bottom:12px}.used-hours{font-weight:700;color:#244d90!important;font-size:12px!important}
+.leave-total{background:#e5edf9;border:1px solid #d4e1f4;border-radius:13px;padding:18px 12px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:3px}
+.leave-total strong{font-size:clamp(42px,6vw,60px);font-weight:800;line-height:1.1;font-variant-numeric:tabular-nums}
+.leave-total span{font-size:18px;font-weight:700;color:#344d71}
+@media(max-width:650px){.leave-details{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.leave-total strong{font-size:44px}.leave-total span{font-size:16px}}
+
+/* v1.6.18 — jedno poziome podsumowanie miesiąca */
+.monthly-single{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:8px 10px;background:#eef3fb;border-radius:12px;padding:20px 12px;text-align:center;font-size:clamp(14px,1.7vw,19px);font-weight:500;line-height:1.5}
+.monthly-single span{white-space:nowrap}
+.monthly-single strong{font-size:1.18em;font-weight:800;font-variant-numeric:tabular-nums}
+.monthly-single .monthly-sep{color:#7890b1;font-weight:500}
+@media(max-width:450px){.monthly-single{font-size:14px;gap:5px 7px;padding:14px 8px}}
+
+/* v1.6.23 — motyw jasny / ciemny / automatyczny */
+:root{color-scheme:light}
+:root[data-theme="dark"]{color-scheme:dark;color:#e7edf7;background:#101827}
+:root[data-theme="dark"] body{background:#101827;color:#e7edf7}
+:root[data-theme="dark"] header{background:#0b1220}
+:root[data-theme="dark"] header small{color:#b6c5da}
+:root[data-theme="dark"] .panel,:root[data-theme="dark"] dialog{background:#1b2638;color:#e7edf7;border-color:#35445a}
+:root[data-theme="dark"] .stat,:root[data-theme="dark"] .monthly-single,:root[data-theme="dark"] .copy-preview,:root[data-theme="dark"] .leave-total{background:#293951;color:#f0f5ff;border-color:#425673}
+:root[data-theme="dark"] .stat span,:root[data-theme="dark"] .leave-total span,:root[data-theme="dark"] .muted,:root[data-theme="dark"] .foot,:root[data-theme="dark"] .legend,:root[data-theme="dark"] .copy-note,:root[data-theme="dark"] .weekday,:root[data-theme="dark"] .day small{color:#b7c6dc}
+:root[data-theme="dark"] button,:root[data-theme="dark"] .btn,:root[data-theme="dark"] input,:root[data-theme="dark"] select,:root[data-theme="dark"] textarea{background:#253349;color:#edf3ff;border-color:#52647d}
+:root[data-theme="dark"] button.primary,:root[data-theme="dark"] .app-tabs button.active,:root[data-theme="dark"] .copy-options button[aria-pressed="true"]{background:#3564ae;color:#fff;border-color:#6088c9}
+:root[data-theme="dark"] .day{background:#233147;color:#edf3ff;border-color:#485971}
+:root[data-theme="dark"] .day.blank{background:transparent}
+:root[data-theme="dark"] .day.work{background:#193e65}
+:root[data-theme="dark"] .day.vacation{background:#216a43;border-color:#4fb77a;color:#f1fff5}
+:root[data-theme="dark"] .day.demand{background:#17574c}
+:root[data-theme="dark"] .day.sick{background:#5c4322}
+:root[data-theme="dark"] .day.other{background:#49365e}
+:root[data-theme="dark"] .day.parental{background:#563449}
+:root[data-theme="dark"] .day.special{background:#225057}
+:root[data-theme="dark"] .day.holiday{outline-color:#d88c97}
+:root[data-theme="dark"] .weekchecks label{background:#26374d;border-color:#52647d}
+:root[data-theme="dark"] .message{background:#54441d;color:#fff0be}
+:root[data-theme="dark"] .feedback{background:#214a3b;color:#d6ffe8}
+:root[data-theme="dark"] .monthly-single .monthly-sep{color:#b4c7e5}
+:root[data-theme="dark"] dialog::backdrop{background:#020713b8}
+.app-brand{display:flex;align-items:center;gap:12px;min-width:0}.app-brand-icon{width:56px;height:56px;object-fit:cover;border-radius:13px;flex-shrink:0}@media(max-width:650px){.app-brand-icon{width:46px;height:46px;border-radius:11px}.app-brand{gap:9px}}
+
+/* v1.6.23 — zdjęcia papierowych grafików */
+.photo-gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px}.photo-card{background:#eef3fb;border:1px solid #d8e2f0;border-radius:12px;padding:12px;min-width:0}.photo-card img{width:100%;height:170px;object-fit:contain;background:#fff;border-radius:8px;cursor:pointer}.photo-card strong{display:block;margin:8px 0 4px}.photo-card .actions{margin-top:8px}.photo-card .actions button{font-size:12px;padding:7px}.photo-card p{overflow-wrap:anywhere}.photo-gallery .muted{grid-column:1/-1}:root[data-theme="dark"] .photo-card{background:#293951;border-color:#425673}:root[data-theme="dark"] .photo-card img{background:#1b2638}@media(max-width:450px){.app-tabs button{font-size:12px;padding:9px 5px}.photo-gallery{grid-template-columns:1fr}}
+
+.auth-settings{margin-top:20px;padding-top:15px;border-top:1px solid var(--border,#d4dce8)}.auth-settings h3{margin:0 0 12px}.auth-settings label{display:block;margin:10px 0}.auth-dialog{max-width:420px}.auth-dialog::backdrop{background:rgba(9,19,38,.82)}body.auth-locked>header,body.auth-locked>main{visibility:hidden}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}.month-jump{align-items:center}.month-jump select{width:auto;max-width:135px;padding:9px 6px}.month-jump input{width:90px;padding:9px 6px}@media(max-width:650px){.month-jump{width:100%;justify-content:center}.month-jump select{max-width:112px}.month-jump input{width:76px}.month-jump button{padding:9px 8px}}
+
+/* v1.6.35 — mniejsze tła liczników urlopu, bez zmiany rozmiarów czcionek */
+.leave-details{gap:8px;margin-bottom:8px}
+.leave-details .stat{padding:8px 8px;gap:2px}
+.leave-total{padding:8px 12px;gap:2px}
+@media(max-width:650px){.leave-details .stat{padding:7px 5px}.leave-total{padding:8px 8px}}
+.month-heading{display:flex;align-items:center;gap:14px;flex:1 1 510px;min-width:0}.month-heading h2{flex:0 0 315px;white-space:nowrap}.month-nav{align-items:center;flex-wrap:nowrap;margin-left:auto;flex-shrink:0}@media(max-width:650px){.month-heading{flex:1 1 100%;display:grid;grid-template-columns:1fr;gap:8px}.month-heading h2{font-size:25px;white-space:normal}.month-nav{justify-self:end;margin-left:0;gap:5px}.month-nav button{padding:8px 10px}}</style><script>(function(){try{const t=localStorage.getItem("mojGrafikTheme")||"auto";document.documentElement.dataset.theme=t==="dark"||t==="light"?t:(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light")}catch(e){document.documentElement.dataset.theme="light"}})();</script><link rel="manifest" href="./manifest.webmanifest"><link rel="apple-touch-icon" href="./icon-192.png"></head><body>
+<header><div class="wrap"><div class="app-brand"><img class="app-brand-icon" src="data:image/png;base64,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" alt="Ikona Mój Grafik i Urlopy"><div><h1>Mój Grafik i Urlopy</h1><small id="welcome">Twój osobisty kalendarz pracy</small></div></div><div class="actions"><button id="settingsBtn">⚙ Ustawienia</button><button id="backupBtn">Kopia danych</button></div></div></header>
+<main><nav class="app-tabs" aria-label="Zakładki aplikacji"><button type="button" id="tabCalendar" class="active" aria-selected="true">Kalendarz</button><button type="button" id="tabAnalyses" aria-selected="false">Analizy</button><button type="button" id="tabPhotos" aria-selected="false">Zdjęcia grafików</button></nav><div id="calendarTab"><section class="panel"><div class="stats leave-details"><div class="stat"><strong id="entitlement">26</strong><span>Urlop roczny</span></div><div class="stat"><strong id="carryEntered">—</strong><span>Urlop Zaległy</span></div><div class="stat"><strong id="used">0</strong><span>Wykorzystano</span><span id="usedHours" class="used-hours">0 godz.</span></div><div class="stat"><strong id="carryRemaining">—</strong><span>Pozostało zaległego</span></div><div class="stat"><strong id="currentUsed">—</strong><span>Wykorzystano z bieżącego</span></div><div class="stat"><strong id="sickTotal">0</strong><span>Chorobowe</span></div><span id="currentRemaining" class="hidden" aria-hidden="true"></span></div><div class="leave-total" aria-live="polite"><strong id="totalRemaining">—</strong><span>Łącznie pozostało urlopu</span></div><p class="muted" id="carryInfo"></p><button type="button" id="carryEdit">Ustaw / skoryguj urlop zaległy</button></section>
+<section class="panel"><div class="toolbar"><div class="month-heading"><h2 id="monthTitle"></h2><div class="actions month-nav"><button id="prev" aria-label="Poprzedni miesiąc">←</button><button id="today">Dziś</button><button id="next" aria-label="Następny miesiąc">→</button></div></div><div class="actions month-jump"><label class="sr-only" for="jumpMonth">Wybierz miesiąc</label><select id="jumpMonth" aria-label="Wybierz miesiąc"></select><label class="sr-only" for="jumpYear">Wybierz rok</label><input id="jumpYear" aria-label="Wybierz rok" type="number" min="1900" max="9999" step="1" inputmode="numeric"><button id="jumpGo" type="button">Przejdź</button></div></div><div class="calendar" id="calendar"></div><div class="legend"><span><i class="dot" style="background:#cde3ff"></i>Praca</span><span><i class="dot" style="background:#c6ebd0"></i>Urlop</span><span><i class="dot" style="background:#ffe0aa"></i>Chorobowe</span><span><i class="dot" style="background:#dfcafa"></i>Inna nieobecność</span><span>🔴 Święto</span></div><p class="muted">Kliknij dzień, aby zmienić grafik lub wpisać nieobecność.</p></section>
+
+<section class="panel"><h3 style="text-align:center">Podsumowanie miesiąca</h3><div class="monthly-single" aria-label="Podsumowanie miesiąca"><span>Dni pracy <strong id="workDays">0</strong></span><span class="monthly-sep" aria-hidden="true">/</span><span>Dni wolne <strong id="offDays">0</strong></span><span class="monthly-sep" aria-hidden="true">/</span><span>Dni urlopu <strong id="vacDays">0</strong></span><span class="monthly-sep" aria-hidden="true">/</span><span>Chorobowe <strong id="sickDays">0</strong></span></div><div class="hidden" aria-hidden="true"><strong id="workHours">0</strong><strong id="otherDays">0</strong></div></section>
+<section class="panel hidden" id="inlineEditor"><h3 id="inlineTitle">Edytuj dzień</h3><p class="muted">Wybierz status dnia i godziny. Jeśli koniec zmiany jest wcześniejszy niż początek, oznacza to zmianę kończącą się następnego dnia.</p><div class="formgrid"><label>Status dnia<select id="inlineStatus"><option value="auto">Według grafiku domyślnego</option><option value="work">Praca</option><option value="off">Wolne</option><option value="vacation">Urlop wypoczynkowy</option><option value="demand">Urlop na żądanie</option><option value="sick">Zwolnienie chorobowe</option><option value="unpaid">Urlop bezpłatny</option><option value="care">Opieka / zwolnienie opiekuńcze</option><option value="childcare">Opieka nad dzieckiem</option><option value="maternity">Urlop macierzyński</option><option value="paternity">Urlop ojcowski</option><option value="parental">Urlop rodzicielski</option><option value="special">Urlop okolicznościowy</option><option value="saturday_comp">Wolne za święto w sobotę</option><option value="employer_off">Dodatkowy dzień wolny od pracodawcy</option><option value="force">Siła wyższa</option><option value="other">Inna nieobecność</option></select></label><label>Notatka<input id="inlineNote" maxlength="150" placeholder="Opcjonalnie"></label><label>Godzina od<input type="time" id="inlineStart"></label><label>Godzina do<input type="time" id="inlineEnd"></label></div><p id="inlineHoliday" class="muted"></p><p id="shiftInfo" class="muted" role="status"></p><div class="actions"><button class="primary" id="inlineSave">Zapisz zmiany</button><button id="inlineCancel">Zamknij edycję</button></div><p class="hidden feedback" id="saveFeedback" role="status"></p></section></div><div id="analysesTab" class="hidden"><h2>Analizy</h2><p class="muted">Narzędzia do planowania i zbiorczej edycji grafiku.</p>
+<section class="panel" id="absenceRegistry"><div class="toolbar"><div><h3 style="margin:0">Rejestr urlopów i nieobecności</h3></div><button id="absenceCsv">Eksport CSV</button></div>
+<div class="formgrid"><label>Rok<select id="absenceYear"></select></label><label>Rodzaj nieobecności<select id="absenceFilter"><option value="all">Wszystkie nieobecności</option><option value="vacation">Urlop wypoczynkowy</option><option value="demand">Urlop na żądanie</option><option value="sick">Chorobowe</option><option value="unpaid">Urlop bezpłatny</option><option value="care">Opieka</option><option value="childcare">Opieka nad dzieckiem</option><option value="maternity">Macierzyński</option><option value="paternity">Ojcowski</option><option value="parental">Rodzicielski</option><option value="special">Okolicznościowy</option><option value="force">Siła wyższa</option><option value="other">Inna nieobecność</option></select></label></div>
+<div id="absenceSummary" class="stats"></div>
+<div style="overflow:auto;max-height:380px"><table style="width:100%;border-collapse:collapse" id="absenceTable"><thead><tr><th>Data</th><th>Rodzaj</th><th>Urlop (godz.)</th><th>Uwagi</th></tr></thead><tbody id="absenceRows"></tbody></table></div>
+<p id="absenceInfo" class="muted"></p></section>
+
+<section class="panel"><h3>Urlopy i nieobecności — rok <span id="leaveYear"></span></h3><div class="stats"><div class="stat"><strong id="demandYear">0</strong><span>Na żądanie (w urlopie wypoczynkowym)</span></div><div class="stat"><strong id="unpaidYear">0</strong><span>Bezpłatny</span></div><div class="stat"><strong id="sickYear">0</strong><span>Chorobowe</span></div><div class="stat"><strong id="careYear">0</strong><span>Opieka i zwolnienia opiekuńcze</span></div><div class="stat"><strong id="familyYear">0</strong><span>Rodzicielskie / rodzinne</span></div><div class="stat"><strong id="specialYear">0</strong><span>Okolicznościowe / inne</span></div></div></section>
+<section class="panel hidden" aria-hidden="true"><h3>Bilans urlopu godzinowego — orientacyjny</h3><div class="stats"><div class="stat"><strong id="hourAllowance">208</strong><span>Pula godzin (dni × 8)</span></div><div class="stat"><strong id="hourUsed">0</strong><span>Wykorzystano godzin</span></div><div class="stat"><strong id="hourRemaining">208</strong><span>Pozostało godzin</span></div></div><p class="muted" id="hourBalanceNote">Godzinowy odpowiednik limitu dni. Przy niepełnym etacie i szczególnych uprawnieniach wymaga weryfikacji.</p></section><section class="panel hidden" aria-hidden="true"><h3>Urlop częściowy — podsumowanie miesiąca</h3><div class="stats"><div class="stat"><strong id="partialDaysMonth">0</strong><span>Dni z urlopem częściowym</span></div><div class="stat"><strong id="partialHoursMonth">0</strong><span>Godziny urlopu częściowego</span></div><div class="stat"><strong id="partialRemainingMonth">0</strong><span>Godziny zmiany poza urlopem</span></div></div><p class="muted">Ostatni licznik to pozostała część zaplanowanej zmiany, nie potwierdzenie przepracowanych godzin. Nie jest dodawana do licznika „Zaplanowane godziny pracy”.</p></section>
+
+<section class="panel hidden" aria-hidden="true"><h3>Urlop w godzinach — podgląd orientacyjny</h3><div class="stats"><div class="stat"><strong id="leaveHoursYear">0</strong><span>Godziny urlopu w roku</span></div><div class="stat"><strong id="leaveHoursMonth">0</strong><span>Godziny urlopu w miesiącu</span></div><div class="stat"><strong id="leaveHoursDemand">0</strong><span>W tym „na żądanie” (godz.)</span></div></div><p class="muted" id="leaveHoursHelp">Obliczenia orientacyjne, bez pełnego rozliczenia kodeksowego.</p></section><section class="panel" id="holidayPanel"><h3>Święta i wolne za sobotę — <span id="holidayYear"></span></h3><p class="muted">Okres rozliczeniowy: <strong>nieustalony</strong>. Terminy odbioru wymagają potwierdzenia u pracodawcy. Wpisz dzień wskazany przez pracodawcę w kalendarzu jako „Wolne za święto w sobotę”.</p><div id="saturdayHolidayList"></div><p class="muted">Święta ustawowe są wyliczane automatycznie. Zmiany prawa w przyszłości wymagają aktualizacji aplikacji. Dotyczy to również innych rozkładów pracy niż poniedziałek–piątek.</p></section>
+<section class="panel"><div class="toolbar"><div><h3 style="margin:0">Kopiowanie grafiku</h3><p class="muted" style="margin-bottom:0">Wybierz dzień źródłowy lub skopiuj cały tydzień.</p></div><button class="primary" id="openCopy">Kopiuj grafik</button></div></section>
+<section class="panel"><div class="toolbar"><div><h3 style="margin:0">Grafik cykliczny</h3><p class="muted" style="margin-bottom:0">Automatycznie ułóż tygodnie poranne, popołudniowe i nocne.</p></div><button class="primary" id="openCycle">Utwórz grafik cykliczny</button></div></section>
+<section class="panel"><div class="toolbar"><div><h3 style="margin:0">Zbiorcza edycja grafiku</h3><p class="muted" style="margin-bottom:0">Zmień godziny, ustaw dni wolne albo wyczyść wpisy w wybranym okresie.</p></div><div class="actions"><button id="undoBulk" disabled>Cofnij ostatnią zmianę zbiorczą</button><button id="showHistory">Historia zmian</button><button class="primary" id="openBulk">Edytuj zakres dat</button></div></div></section>
+<section class="panel"><h3>Twoje dane i bezpieczeństwo</h3><p class="muted">Dane są przechowywane lokalnie w tej przeglądarce na tym urządzeniu. Nie synchronizują się automatycznie z telefonem ani innym komputerem. Regularnie eksportuj kopię zapasową.</p><div class="actions"><button id="exportBtn">Eksportuj kopię JSON</button><button id="importBtn">Wczytaj kopię</button><input class="hidden" id="importFile" type="file" accept=".json,application/json"></div></section>
+</div><div id="photosTab" class="hidden">
+<section class="panel"><h2>Zdjęcia grafików</h2><p class="muted">Zrób zdjęcie papierowego grafiku lub wybierz je z galerii. Zapisz oryginał w folderze urządzenia, a kopię do przeglądania w aplikacji.</p>
+<div class="formgrid"><label>Miesiąc grafiku<input id="photoMonth" type="month"></label><label>Opis (opcjonalnie)<input id="photoNote" maxlength="100" placeholder="np. grafik zatwierdzony"></label></div>
+<div class="actions" style="margin:12px 0"><button class="primary" id="takePhoto">Zrób zdjęcie</button><button id="choosePhoto">Wybierz zdjęcie</button></div>
+<input type="file" id="cameraPhotoInput" accept="image/*" capture="environment" hidden><input type="file" id="galleryPhotoInput" accept="image/*" hidden>
+<div id="photoPending" class="hidden"><img id="photoPreview" alt="Podgląd nowego zdjęcia" style="display:block;max-width:100%;max-height:350px;object-fit:contain;border-radius:10px;margin:12px auto"><div class="actions"><button class="primary" id="savePhoto">Zapisz zdjęcie</button><button id="cancelPhoto">Anuluj</button></div><p class="muted">Po zatwierdzeniu wybierzesz miejsce zapisu oryginału, jeśli przeglądarka na to pozwala. Kopia zostanie zachowana w pamięci tej przeglądarki.</p></div>
+<p id="photoMessage" class="muted" role="status"></p></section>
+<section class="panel"><div class="toolbar"><h3>Archiwum zdjęć</h3><button id="refreshPhotos">Odśwież</button></div><div id="photoGallery" class="photo-gallery"></div></section>
+</div><p class="foot">Mój Grafik i Urlopy WEB v1.6.44 • Autor : Rober B.</p></main>
+<dialog id="carryDialog"><h2>Urlop zaległy</h2><p class="muted" id="carryDialogInfo"></p><label>Rok rozliczenia<input id="carryYear" type="number" min="2000" max="2100"></label><label>Urlop zaległy na 1 stycznia (dni; 1 dzień = 8 godzin)<input id="carryManual" type="number" min="0" max="365" step="0.125" placeholder="Pozostaw puste, aby liczyć automatycznie"></label><p class="muted">Wpisana wartość zastępuje wyliczenie automatyczne tylko dla wskazanego roku. Puste pole przywraca automat. Przy niepełnej historii wpisz stan potwierdzony przez pracodawcę.</p><div class="dialog-actions"><button id="carryCancel">Anuluj</button><button class="primary" id="carrySave">Zapisz</button></div></dialog><dialog id="setupDialog"><h2>Ustawienia grafiku</h2><div class="formgrid"><label>Twoje imię<input id="nameInput" maxlength="50" placeholder="np. Robert"></label><label>Roczny wymiar urlopu (dni)<input id="limitInput" type="number" min="0" max="365" value="26"></label><label>Domyślna godzina rozpoczęcia<input id="startDefault" type="time" value="08:00"></label><label>Domyślna godzina zakończenia<input id="endDefault" type="time" value="16:00"></label></div><p class="muted">Domyślne dni pracy (możesz zmienić każdy dzień osobno):</p><div class="checkdays" id="weekChecks"></div><label style="margin-top:14px">Motyw wyświetlania<select id="themeSelect"><option value="light">Jasny</option><option value="dark">Ciemny</option><option value="auto">Automatyczny (zgodny z urządzeniem)</option></select></label><p class="message">Roczny limit wpisujesz samodzielnie. Prototyp nie wylicza prawnego wymiaru urlopu ani rozliczeń godzinowych.</p><div class="auth-settings"><h3>Logowanie do aplikacji</h3><label>Sposób uruchamiania<select id="authMode"><option value="off">Bez logowania (domyślnie)</option><option value="pin">Login i PIN (4 cyfry)</option><option value="biometric" disabled>Biometria (po wdrożeniu na HTTPS)</option></select></label><div id="authSetupFields" class="hidden"><label>Login<input id="authLoginName" autocomplete="username" maxlength="40" placeholder="Wpisz login"></label><label>Adres e-mail do odzyskiwania PIN-u<input id="authRecoveryEmail" type="email" autocomplete="email" maxlength="254" placeholder="np. adres@domena.pl"></label><label>PIN — 4 cyfry<input id="authNewPin" type="password" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" autocomplete="new-password" placeholder="••••"></label><label>Potwierdź PIN<input id="authConfirmPin" type="password" inputmode="numeric" maxlength="4" autocomplete="new-password" placeholder="••••"></label></div><p class="muted">Logowanie odciskiem palca lub twarzą wymaga bezpiecznego wdrożenia przez HTTPS i weryfikacji poświadczeń WebAuthn. W tej wersji uruchamianej z pliku HTML opcja nie jest dostępna.</p><p class="muted">Adres e-mail jest zapisywany wyłącznie na tym urządzeniu. Ta wersja offline nie wysyła wiadomości i nie umożliwia jeszcze resetowania PIN-u przez e-mail — wymagałoby to bezpiecznej usługi internetowej. Nie traktuj wpisania adresu jako działającego odzyskiwania dostępu.</p><p class="muted">PIN blokuje ekran na tym urządzeniu, ale nie szyfruje danych ani kopii JSON. Przy zmianie ustawień zabezpieczeń wymagany jest dotychczasowy PIN.</p><label id="authOldPinWrap" class="hidden">Dotychczasowy PIN<input id="authOldPin" type="password" inputmode="numeric" maxlength="4" autocomplete="current-password"></label></div><div class="dialog-actions"><button class="primary" id="saveSettings">Zapisz</button></div></dialog>
+<dialog id="dayDialog"><h2 id="dayTitle"></h2><p class="muted">Wybierz status i godziny. Godzina zakończenia wcześniejsza od rozpoczęcia oznacza zmianę nocną kończącą się następnego dnia.</p><label>Status dnia<select id="dayStatus"><option value="auto">Według grafiku domyślnego</option><option value="work">Praca</option><option value="off">Wolne</option><option value="vacation">Urlop wypoczynkowy</option><option value="demand">Urlop na żądanie</option><option value="sick">Zwolnienie chorobowe</option><option value="unpaid">Urlop bezpłatny</option><option value="care">Opieka / zwolnienie opiekuńcze</option><option value="childcare">Opieka nad dzieckiem</option><option value="maternity">Urlop macierzyński</option><option value="paternity">Urlop ojcowski</option><option value="parental">Urlop rodzicielski</option><option value="special">Urlop okolicznościowy</option><option value="saturday_comp">Wolne za święto w sobotę</option><option value="employer_off">Dodatkowy dzień wolny od pracodawcy</option><option value="force">Siła wyższa</option><option value="other">Inna nieobecność</option></select></label><div id="saturdaySourceWrap" class="hidden" style="margin-top:12px"><label>Za które święto sobotnie?<select id="saturdaySource"></select></label><p class="muted">Termin wyznacza pracodawca. Gdy okres rozliczeniowy jest nieznany, sprawdź termin u pracodawcy. Nie obniża to urlopu wypoczynkowego.</p></div><div class="formgrid" style="margin-top:12px"><label>Od<input type="time" id="dayStart"></label><label>Do<input type="time" id="dayEnd"></label></div><label style="margin-top:12px">Notatka<input id="dayNote" maxlength="150" placeholder="Opcjonalnie"></label><p class="muted" id="holidayNote"></p><div id="leaveEditorFields" class="hidden"><label style="display:block;margin-top:12px">Godziny urlopu w tym dniu (pozostaw puste = cała zaplanowana zmiana)<input id="leavePartialHours" type="number" min="0.25" max="24" step="0.25" placeholder="Np. 4"></label><div id="leaveWorkOverrideWrap" class="hidden" style="margin-top:12px"><label style="display:flex;align-items:center;gap:8px;flex-direction:row"><input id="leaveWorkOverride" type="checkbox" style="width:auto;flex:none"><span>Urlop w dniu dodatkowo zaplanowanym do pracy</span></label><p class="muted" style="margin:6px 0 0">Zaznacz tylko wtedy, gdy miałeś zaplanowaną pracę w dniu normalnie wolnym lub w święto.</p></div><p class="muted">Godziny „Od–Do” określają planowaną zmianę, również gdy wpisujesz urlop. Przy urlopie częściowym podaj liczbę godzin urlopu powyżej.</p></div><p class="muted" id="dayShiftPreview" role="status"></p><div class="dialog-actions"><button id="resetDay">Przywróć grafik</button><button id="cancelDay">Anuluj</button><button class="primary" id="saveDay">Zapisz dzień</button></div></dialog>
+<dialog id="copyDialog"><h2>Kopiowanie grafiku</h2><p class="muted">Zmiany są zapisywane dopiero po zatwierdzeniu. Urlopy i inne nieobecności w dniach docelowych są chronione.</p><div class="copy-options"><button id="modeDays" aria-pressed="true">Godziny na wybrane dni</button><button id="modeWeek" aria-pressed="false">Kopiuj tydzień</button></div><div id="copyDaysPane"><div class="formgrid"><label>Dzień źródłowy<input id="copySource" type="date"></label><label>Godziny źródłowe<input id="copySourceHours" readonly></label></div><p class="muted">Wybierz dni docelowe w aktualnie wyświetlanym miesiącu:</p><div id="copyDayGrid" class="copy-grid"></div></div><div id="copyWeekPane" class="hidden"><div class="formgrid"><label>Dowolny dzień tygodnia źródłowego<input id="copyWeekSource" type="date"></label><label>Poniedziałek tygodnia docelowego<input id="copyWeekTarget" type="date"></label></div><p class="copy-note">Kopiowane są tylko statusy Praca / Wolne z tygodnia źródłowego. Urlopy i chorobowe nie są przenoszone. Dni bez indywidualnego wpisu zostaną odtworzone według domyślnego grafiku źródłowego.</p></div><label style="flex-direction:row;align-items:center;margin-top:10px"><input id="copyOverwrite" type="checkbox" style="width:auto">Zastąp istniejące wpisy Praca / Wolne w dniach docelowych</label><p class="copy-note">Bez zaznaczenia pomijamy dni z już zapisanym grafikiem. Nieobecności są zawsze pomijane.</p><div class="actions"><button id="copyPreviewBtn">Pokaż podgląd</button></div><div id="copyPreview" class="copy-preview" role="status">Wybierz daty i kliknij „Pokaż podgląd”.</div><div class="dialog-actions"><button id="copyCancel">Anuluj</button><button id="copyApply" class="primary" disabled>Zapisz skopiowany grafik</button></div></dialog>
+<dialog id="cycleDialog"><h2>Automatyczny grafik cykliczny</h2><p class="muted">Ustaw kolejność zmian. Każdy tydzień cyklu ma taki sam układ dni pracy wybrany poniżej. Zmiana nocna może kończyć się następnego dnia.</p>
+<div style="border:1px solid #ccd5e3;border-radius:10px;padding:12px;margin:12px 0">
+<strong>Moje szablony grafików</strong>
+<p class="muted">Zapisz ustawienia zmian pod własną nazwą i użyj ich ponownie. Wczytanie szablonu nie zmienia kalendarza, dopóki nie zatwierdzisz grafiku.</p>
+<div class="formgrid"><label>Nazwa szablonu<input id="cycleTemplateName" maxlength="60" placeholder="np. Moje trzy zmiany"></label><label>Zapisane szablony<select id="cycleTemplateList"><option value="">— wybierz szablon —</option></select></label></div>
+<div class="actions"><button id="cycleTemplateSave">Zapisz szablon</button><button id="cycleTemplateLoad">Wczytaj szablon</button><button id="cycleTemplateDelete">Usuń szablon</button></div>
+</div>
+<div class="formgrid"><label>Pierwszy poniedziałek grafiku<input id="cycleStart" type="date"></label><label>Liczba tygodni do utworzenia<input id="cycleWeeks" type="number" min="1" max="26" value="4"></label></div>
+<label>Powtarzany cykl tygodni<select id="cyclePattern"><option value="morning,afternoon">Poranna → popołudniowa</option><option value="morning,afternoon,night">Poranna → popołudniowa → nocna</option><option value="morning,night">Poranna → nocna</option><option value="morning">Tylko poranna</option><option value="afternoon">Tylko popołudniowa</option><option value="night">Tylko nocna</option></select></label>
+<div class="formgrid"><label>Poranna: od<input id="cycleMorningStart" type="time" value="06:00"></label><label>Poranna: do<input id="cycleMorningEnd" type="time" value="14:00"></label><label>Popołudniowa: od<input id="cycleAfternoonStart" type="time" value="14:00"></label><label>Popołudniowa: do<input id="cycleAfternoonEnd" type="time" value="22:00"></label><label>Nocna: od<input id="cycleNightStart" type="time" value="22:00"></label><label>Nocna: do<input id="cycleNightEnd" type="time" value="06:00"></label></div>
+<p class="muted">Dni pracy w każdym tygodniu cyklu:</p><div id="cycleWeekdays" class="weekchecks"></div>
+<label style="flex-direction:row;align-items:center"><input id="cycleOverwrite" type="checkbox" style="width:auto">Zastąp istniejące wpisy Praca / Wolne</label>
+<p class="copy-note">Urlopy i inne nieobecności pozostają bez zmian. Dni ze świętami zostaną pominięte, chyba że mają już indywidualnie wpisaną pracę lub dzień wolny i zezwolisz na nadpisanie. Bez zaznaczenia nadpisywania istniejące wpisy są pomijane.</p>
+<div class="actions"><button id="cyclePreviewBtn">Pokaż podgląd</button></div><div id="cyclePreview" class="copy-preview" role="status">Ustaw cykl i kliknij „Pokaż podgląd”.</div>
+<div class="dialog-actions"><button id="cycleCancel">Anuluj</button><button id="cycleApply" class="primary" disabled>Zapisz grafik cykliczny</button></div></dialog>
+<dialog id="bulkDialog"><h2>Zbiorcza edycja grafiku</h2><p class="muted">Zmieniaj wiele dni jednocześnie. Urlopy i pozostałe nieobecności są zawsze chronione.</p>
+<div class="formgrid"><label>Data od<input id="bulkFrom" type="date"></label><label>Data do<input id="bulkTo" type="date"></label></div>
+<label>Co zrobić?<select id="bulkAction"><option value="work">Ustaw godziny pracy</option><option value="off">Oznacz jako wolne</option><option value="clear">Wyczyść indywidualne wpisy (powrót do domyślnego grafiku)</option></select></label>
+<div id="bulkHours" class="formgrid"><label>Praca od<input id="bulkStart" type="time" value="06:00"></label><label>Praca do<input id="bulkEnd" type="time" value="14:00"></label></div>
+<p class="muted">Wybierz dni tygodnia, których ma dotyczyć zmiana:</p><div class="weekchecks" id="bulkWeekdays"></div>
+<label style="display:flex;flex-direction:row;align-items:center;gap:8px"><input id="bulkOverwrite" type="checkbox" style="width:auto">Zastąp istniejące wpisy Praca / Wolne</label>
+<p class="copy-note">Bez nadpisywania zmieniane są tylko dni bez indywidualnego wpisu. Czyszczenie usuwa wyłącznie wpisy Praca / Wolne; nigdy nie usuwa urlopów ani innych nieobecności. Święta bez indywidualnego wpisu są pomijane przy ustawianiu pracy i wolnego.</p>
+<div class="actions"><button id="bulkPreviewBtn">Pokaż podgląd</button></div><div id="bulkPreview" class="copy-preview" role="status">Wybierz daty i pokaż podgląd.</div>
+<div class="dialog-actions"><button id="bulkCancel">Anuluj</button><button id="bulkApply" class="primary" disabled>Zapisz zmiany</button></div></dialog>
+<dialog id="historyDialog"><h2>Historia zmian grafiku</h2><p class="muted">Ostatnie 20 operacji zbiorczych, kopiowania i generowania cyklu. Przywrócenie jest możliwe tylko wtedy, gdy żaden z dni danej operacji nie został później zmieniony.</p><label>Filtruj historię według daty dnia lub rodzaju operacji<input id="historyFilter" type="search" placeholder="np. 2026-11-03 lub Kopiowanie"></label><div id="historyEntries" style="max-height:55vh;overflow:auto"></div><div class="dialog-actions"><button id="historyClose">Zamknij</button></div></dialog>
+<dialog id="backupDialog"><h2>Kopia zapasowa</h2><p class="muted">Eksport tworzy kopię JSON. Jeśli przeglądarka obsługuje wybór plików, zapamiętamy ostatnio wybrany folder na tym urządzeniu i zaproponujemy go przy następnym zapisie oraz odczycie (za zgodą przeglądarki). W przeciwnym razie kopia trafi do pobranych plików zgodnie z ustawieniami przeglądarki. Import zastąpi wszystkie obecne dane aplikacji.</p><div class="actions"><button id="backupExport">Pobierz kopię</button><button id="backupImport">Wczytaj kopię</button></div><div class="dialog-actions"><button id="backupClose">Zamknij</button></div></dialog>
+<dialog id="authDialog" class="auth-dialog"><h2>Mój Grafik i Urlopy</h2><p class="muted">Wpisz login i 4-cyfrowy PIN, aby otworzyć aplikację.</p><form id="authForm"><label>Login<input id="authUser" autocomplete="username" required></label><label>PIN<input id="authPin" type="password" inputmode="numeric" maxlength="4" autocomplete="current-password" required></label><p id="authError" class="muted" role="alert"></p><button id="authForgotPin" type="button">Nie pamiętam PIN-u</button><p id="authRecoveryInfo" class="muted hidden" role="status"></p><div class="dialog-actions"><button class="primary" type="submit">Zaloguj</button></div></form></dialog><script>
+(function(){
+ const tabs=[['calendar',document.getElementById('calendarTab'),document.getElementById('tabCalendar')],['analyses',document.getElementById('analysesTab'),document.getElementById('tabAnalyses')],['photos',document.getElementById('photosTab'),document.getElementById('tabPhotos')]];
+ function show(which){tabs.forEach(([name,panel,button])=>{const active=name===which;panel.classList.toggle('hidden',!active);button.classList.toggle('active',active);button.setAttribute('aria-selected',String(active))})}
+ tabs.forEach(([name,,button])=>button.addEventListener('click',()=>show(name)));
+})();
+</script>
+<script>
+'use strict';
+const KEY='moj-grafik-urlopy-v01'; // Ten sam klucz i format co v0.2: zachowujemy dotychczasowe wpisy.
+const names=['Pon','Wt','Śr','Czw','Pt','Sob','Nd'];const $=id=>document.getElementById(id);const pad=n=>String(n).padStart(2,'0');const dateKey=(y,m,d)=>`${y}-${pad(m+1)}-${pad(d)}`;const now=new Date();let year=now.getFullYear(),month=now.getMonth(),selected='';
+const defaultData=()=>({version:1,settings:{name:'',limit:26,weekdays:[1,2,3,4,5],start:'08:00',end:'16:00'},days:{}});
+function load(){try{const x=JSON.parse(localStorage.getItem(KEY));if(x&&x.version===1&&x.settings&&x.days&&typeof x.days==='object'&&!Array.isArray(x.days))return x}catch(e){}return defaultData()}
+let data=load();function persist(){try{localStorage.setItem(KEY,JSON.stringify(data));return true}catch(e){alert('Nie udało się zapisać danych w przeglądarce. Sprawdź dostępne miejsce lub tryb prywatny.');return false}}
+function easter(y){let a=y%19,b=Math.floor(y/100),c=y%100,d=Math.floor(b/4),e=b%4,f=Math.floor((b+8)/25),g=Math.floor((b-f+1)/3),h=(19*a+b-d-g+15)%30,i=Math.floor(c/4),k=c%4,l=(32+2*e+2*i-h-k+7)%7,m=Math.floor((a+11*h+22*l)/451),q=h+l-7*m+114;return new Date(y,Math.floor(q/31)-1,q%31+1)}
+function holidays(y){let map={};const add=(m,d,n)=>map[dateKey(y,m-1,d)]=n;[[1,1,'Nowy Rok'],[1,6,'Trzech Króli'],[5,1,'Święto Pracy'],[5,3,'Święto Konstytucji 3 Maja'],[8,15,'Wniebowzięcie NMP'],[11,1,'Wszystkich Świętych'],[11,11,'Święto Niepodległości'],...(y>=2025?[[12,24,'Wigilia']]:[]),[12,25,'Boże Narodzenie'],[12,26,'Drugi dzień świąt']].forEach(x=>add(...x));const eas=easter(y);[[0,'Wielkanoc'],[1,'Poniedziałek Wielkanocny'],[49,'Zielone Świątki'],[60,'Boże Ciało']].forEach(([offset,label])=>{let x=new Date(y,eas.getMonth(),eas.getDate()+offset);map[dateKey(y,x.getMonth(),x.getDate())]=label});return map}
+const fmt=(y,m,d)=>new Intl.DateTimeFormat('pl-PL',{day:'numeric',month:'long',year:'numeric'}).format(new Date(y,m,d));const isWorkDefault=(y,m,d)=>data.settings.weekdays.includes(new Date(y,m,d).getDay());const statusLabels={auto:'',work:'Praca',off:'Wolne',vacation:'Urlop',demand:'Na żądanie',sick:'Chorobowe',unpaid:'Bezpłatny',care:'Opieka',childcare:'Opieka nad dzieckiem',maternity:'Macierzyński',paternity:'Ojcowski',parental:'Rodzicielski',special:'Okolicznościowy',saturday_comp:'Wolne za święto w sobotę',employer_off:'Dodatkowe wolne',force:'Siła wyższa',other:'Inna nieobecność'};
+function getStatus(y,m,d,h){let entry=data.days[dateKey(y,m,d)];if(entry&&entry.status&&entry.status!=='auto')return entry.status;return h?'off':(isWorkDefault(y,m,d)?'work':'off')}
+function saturdayHolidays(y){return Object.entries(holidays(y)).filter(([key])=>{const [a,b,c]=key.split('-').map(Number);return new Date(a,b-1,c).getDay()===6})}
+function renderSaturdayHolidays(){const root=$('saturdayHolidayList');if(!root)return;$('holidayYear').textContent=year;root.replaceChildren();const list=saturdayHolidays(year);if(!list.length){root.textContent='W tym roku nie ma świąt ustawowych przypadających w sobotę.';return}for(const [key,label] of list){const matches=Object.entries(data.days).filter(([,v])=>v&&v.status==='saturday_comp'&&v.compensates===key);const item=document.createElement('p');const strong=document.createElement('strong');strong.textContent=key+' — '+label;item.append(strong,document.createTextNode(matches.length?' → odebrane: '+matches.map(([d])=>d).join(', '):' → brak przypisanego dnia wolnego'));root.append(item)}}
+function updateSaturdaySource(){const wrap=$('saturdaySourceWrap');if(!wrap)return;const active=$('dayStatus').value==='saturday_comp';wrap.classList.toggle('hidden',!active);if(!active)return;const sel=$('saturdaySource'),old=(data.days[selected]||{}).compensates||sel.value;sel.replaceChildren();const y=Number(selected.slice(0,4));for(const [key,label] of saturdayHolidays(y)){const option=document.createElement('option');option.value=key;option.textContent=key+' — '+label;sel.append(option)}if([...sel.options].some(o=>o.value===old))sel.value=old}
+function minutesBetween(start,end){if(!/^\d{2}:\d{2}$/.test(start||'')||!/^\d{2}:\d{2}$/.test(end||''))return 0;const [a,b]=start.split(':').map(Number),[c,d]=end.split(':').map(Number);let diff=(c*60+d)-(a*60+b);if(diff<0)diff+=1440;return diff}
+function formatHours(minutes){return (minutes/60).toLocaleString('pl-PL',{maximumFractionDigits:2})}
+function updateShiftInfo(){const st=$('inlineStatus').value,a=$('inlineStart').value,b=$('inlineEnd').value;const mins=minutesBetween(a,b);$('shiftInfo').textContent=st==='work'?(mins?`Długość zmiany: ${formatHours(mins)} godz. ${a>b?'(zakończenie następnego dnia)':''}`:'Ustaw różne godziny początku i końca zmiany.'):'Godziny są rozliczane tylko dla dni ze statusem Praca.'}
+function plannedMinutesForLeave(key,holidayMap){
+ const [y,m,d]=key.split('-').map(Number);if(!Number.isInteger(y)||!Number.isInteger(m)||!Number.isInteger(d)||m<1||m>12||d<1||d>31)return 0;
+ const entry=data.days[key]||{};
+ // Harmonogram wpisany ręcznie może obejmować weekend lub święto.
+ const scheduled=entry.leaveScheduled===true || (!holidayMap[key]&&isWorkDefault(y,m-1,d));
+ if(!scheduled)return 0;
+ const shift=minutesBetween(entry.start||data.settings.start,entry.end||data.settings.end);
+ if(!shift)return 0;
+ if(entry.leaveMinutes!=null&&Number.isFinite(Number(entry.leaveMinutes)))return Math.min(shift,Math.max(0,Number(entry.leaveMinutes)));
+ return shift;
+}
+function renderLeaveHours(){
+ const cache={};let annual=0,monthly=0,demand=0,zeroDays=0;
+ for(const [key,entry] of Object.entries(data.days)){
+  if(!key.startsWith(`${year}-`)||!entry||!['vacation','demand'].includes(entry.status))continue;
+  const yr=Number(key.slice(0,4));cache[yr]??=holidays(yr);
+  const mins=plannedMinutesForLeave(key,cache[yr]);
+  annual+=mins;if(key.startsWith(`${year}-${pad(month+1)}-`))monthly+=mins;
+  if(entry.status==='demand')demand+=mins;
+  if(mins===0)zeroDays++;
+ }
+ $('leaveHoursYear').textContent=formatHours(annual);
+ $('leaveHoursMonth').textContent=formatHours(monthly);
+  $('leaveHoursDemand').textContent=formatHours(demand);
+  let partialDays=0,partialMinutes=0,remainingShift=0;
+  for(const [key,entry] of Object.entries(data.days)){
+   if(!key.startsWith(`${year}-${pad(month+1)}-`)||!entry||!['vacation','demand'].includes(entry.status))continue;
+   const scheduled=entry.leaveScheduled===true||(!holidays(year)[key]&&isWorkDefault(year,month,Number(key.slice(-2))));
+   if(!scheduled)continue;
+   const shift=minutesBetween(entry.start||data.settings.start,entry.end||data.settings.end);
+   const used=plannedMinutesForLeave(key,holidays(year));
+   if(shift>0&&used>0&&used<shift){partialDays++;partialMinutes+=used;remainingShift+=shift-used;}
+  }
+  $('partialDaysMonth').textContent=partialDays;
+  $('partialHoursMonth').textContent=formatHours(partialMinutes);
+  $('partialRemainingMonth').textContent=formatHours(remainingShift);
+ const allowance=Number(data.settings.limit)*8*60; // pula urlopu w minutach (formatHours przelicza minuty na godziny)
+ $('hourAllowance').textContent=formatHours(allowance);
+ $('hourUsed').textContent=formatHours(annual);
+ $('hourRemaining').textContent=formatHours(allowance-annual);
+ $('hourBalanceNote').textContent=`Przelicznik 1 dzień = 8 godzin; wykorzystanie uwzględnia zaplanowane zmiany oraz częściowe urlopy. ${zeroDays?`${zeroDays} wpisów urlopu ma 0 godzin — sprawdź, czy były to dni pracujące. `:''}Wynik pomocniczy: nie jest formalnym rozliczeniem kadrowym.`;
+ $('leaveHoursHelp').textContent=`Godziny według harmonogramu zapisanego przy urlopie lub domyślnych dni pracy. ${zeroDays?`W ${zeroDays} wpisach urlopowych nie naliczono godzin. `:''}Wpisy z poprzednich wersji mogą wymagać uzupełnienia harmonogramu. Licznik wykorzystania na górze pokazuje równowartość dni urlopu według godzin (8 h = 1 dzień).`;
+}
+function leaveUsedMinutes(y){
+ // Rozliczaj urlop godzinowo; zachowaj zgodność ze starymi wpisami bez godzin.
+ let sum=0;const hs=holidays(y);
+ for(const [key,e] of Object.entries(data.days)){
+  if(!key.startsWith(y+'-')||!e||!['vacation','demand'].includes(e.status))continue;
+  const actual=plannedMinutesForLeave(key,hs);
+  if(e.leaveMinutes!=null&&Number.isFinite(Number(e.leaveMinutes))){
+   // Wpis częściowy jest zawsze rozliczany według zapisanych godzin.
+   sum+=Math.max(0,actual || (e.leaveScheduled!==true ? 0 : Number(e.leaveMinutes)));
+  }else{
+   // Wpisy pełnodniowe: godziny grafiku; stare wpisy bez harmonogramu 8 h.
+   sum+=actual || 480;
+  }
+ }
+ return sum;
+}
+function carryStart(y,depth=0){
+ const overrides=data.carryOverrides||{};
+ if(Object.prototype.hasOwnProperty.call(overrides,String(y)))return {minutes:Math.round(Number(overrides[y])*480),source:'ręcznie'};
+ if(depth>40||y<2000)return {minutes:null,source:'brak historii'};
+ // Bez zatwierdzonego salda początkowego nie zakładamy, że zaległy urlop wynosi zero.
+ const previous=carryStart(y-1,depth+1);
+ if(previous.minutes===null)return {minutes:null,source:'brak pełnych danych'};
+ const prevUse=leaveUsedMinutes(y-1),prevCurrent=Math.max(0,Number(data.settings.limit)*480-Math.max(0,prevUse-previous.minutes));
+ return {minutes:Math.max(0,previous.minutes+Number(data.settings.limit)*480-prevUse),source:'automatycznie'};
+}
+function renderCarry(){
+ const manualCarry=(data.carryOverrides||{})[year];
+ $('carryEntered').textContent=manualCarry===undefined?'—':Number(manualCarry).toLocaleString('pl-PL',{maximumFractionDigits:3});
+ $('carryEntered').title=manualCarry===undefined?'Brak ręcznego wpisu dla tego roku':'Ręcznie wpisany stan zaległego urlopu na 1 stycznia '+year;
+ const initial=carryStart(year),used=leaveUsedMinutes(year),current=Number(data.settings.limit)*480;
+ if(initial.minutes===null){$('carryRemaining').textContent='—';$('currentRemaining').textContent='—';$('currentUsed').textContent='—';$('totalRemaining').textContent='—';$('carryInfo').textContent='Nie znamy salda zaległego urlopu. Wprowadź ręczną korektę dla roku początkowego, aby uruchomić automatyczne wyliczanie w kolejnych latach.';return}
+ const fromCarry=Math.min(initial.minutes,used),fromCurrent=Math.max(0,used-fromCarry),remainCarry=initial.minutes-fromCarry,remainCurrent=current-fromCurrent;
+ const days=m=>(m/480).toLocaleString('pl-PL',{maximumFractionDigits:3});
+ $('carryRemaining').textContent=days(remainCarry);$('currentRemaining').textContent=days(remainCurrent);$('currentUsed').textContent=days(fromCurrent);$('totalRemaining').textContent=days(remainCarry+remainCurrent);
+ $('carryInfo').textContent=`Stan zaległy na 1 stycznia: ${days(initial.minutes)} dni (${initial.source}). Zużycie: ${days(fromCarry)} dni zaległego, ${days(fromCurrent)} dni bieżącego. Rozliczenie orientacyjne według godzin (8 godz. = 1 dzień); dane nie zastępują rozliczenia kadrowego.`;
+}
+$('carryEdit').onclick=()=>{$('carryYear').value=year;const val=(data.carryOverrides||{})[year];$('carryManual').value=val===undefined?'':val;$('carryDialogInfo').textContent=`Automatyczny stan: ${carryStart(year).minutes===null?'nieznany':(carryStart(year).minutes/480)+' dni'}.`;$('carryDialog').showModal()};
+$('carryCancel').onclick=()=>$('carryDialog').close();
+$('carrySave').onclick=()=>{const y=Number($('carryYear').value),raw=$('carryManual').value.trim();if(!Number.isInteger(y)||y<2000||y>2100){alert('Nieprawidłowy rok');return}if(raw!==''&&(!Number.isFinite(Number(raw))||Number(raw)<0||Number(raw)>365||!Number.isInteger(Number(raw)*8*60))){alert('Wpisz poprawną liczbę dni (co 0,125 dnia)');return}data.carryOverrides=data.carryOverrides||{};if(raw==='')delete data.carryOverrides[y];else data.carryOverrides[y]=Number(raw);if(persist()){$('carryDialog').close();render()}};
+function render(){renderSaturdayHolidays();const settings=data.settings;$('welcome').textContent=settings.name?`Witaj, ${settings.name} • Twój osobisty kalendarz`:'Twój osobisty kalendarz';const usedMinutes=leaveUsedMinutes(year);$('entitlement').textContent=settings.limit;$('used').textContent=(usedMinutes/480).toLocaleString('pl-PL',{maximumFractionDigits:2});$('usedHours').textContent=`${(usedMinutes/60).toLocaleString('pl-PL',{maximumFractionDigits:2})} godz.`;let workDays=0,workMinutes=0,vacDays=0;const holidayMap=holidays(year),daysInMonth=new Date(year,month+1,0).getDate();for(let d=1;d<=daysInMonth;d++){const k=dateKey(year,month,d),entry=data.days[k]||{},status=getStatus(year,month,d,holidayMap[k]);if(status==='work'){workDays++;workMinutes+=minutesBetween(entry.start||settings.start,entry.end||settings.end)}if(status==='vacation'||status==='demand')vacDays++}renderLeaveHours();renderCarry();$('workDays').textContent=workDays;$('workHours').textContent=formatHours(workMinutes);$('vacDays').textContent=vacDays;let sickDays=0,offDays=0,otherDays=0;for(let d=1;d<=daysInMonth;d++){const status=getStatus(year,month,d,holidayMap[dateKey(year,month,d)]);if(status==='sick')sickDays++;else if(['off','saturday_comp','employer_off'].includes(status))offDays++;else if(!['work','vacation','demand'].includes(status))otherDays++}const yearly={demand:0,unpaid:0,sick:0,care:0,childcare:0,maternity:0,paternity:0,parental:0,special:0,force:0,other:0};for(const [key,entry] of Object.entries(data.days)){if(key.startsWith(year+'-')&&Object.hasOwn(yearly,entry.status))yearly[entry.status]++} $('leaveYear').textContent=year;$('demandYear').textContent=yearly.demand;$('unpaidYear').textContent=yearly.unpaid;$('sickYear').textContent=yearly.sick;$('sickTotal').textContent=yearly.sick;$('careYear').textContent=yearly.care+yearly.childcare;$('familyYear').textContent=yearly.maternity+yearly.paternity+yearly.parental;$('specialYear').textContent=yearly.special+yearly.force+yearly.other;$('sickDays').textContent=sickDays;$('offDays').textContent=offDays;$('otherDays').textContent=otherDays;$('monthTitle').textContent=new Intl.DateTimeFormat('pl-PL',{month:'long',year:'numeric'}).format(new Date(year,month,1));$('jumpMonth').value=String(month);$('jumpYear').value=String(year);const cal=$('calendar');cal.replaceChildren();names.forEach(n=>{const x=document.createElement('div');x.className='weekday';x.textContent=n;cal.append(x)});let offset=(new Date(year,month,1).getDay()+6)%7;for(let i=0;i<offset;i++){const x=document.createElement('div');x.className='day blank';cal.append(x)}const count=new Date(year,month+1,0).getDate(),hs=holidays(year);for(let d=1;d<=count;d++){const key=dateKey(year,month,d),holiday=hs[key],entry=data.days[key]||{},s=getStatus(year,month,d,holiday),b=document.createElement('button');b.className=`day ${s==='vacation'?'vacation':s==='demand'?'demand':s==='sick'?'sick':s==='saturday_comp'?'special':s==='employer_off'?'other':['maternity','paternity','parental'].includes(s)?'parental':['care','childcare','force'].includes(s)?'special':['unpaid','special','other','employer_off'].includes(s)?'other':s==='work'?'work':''} ${holiday?'holiday':''} ${key===dateKey(now.getFullYear(),now.getMonth(),now.getDate())?'today':''}`;b.setAttribute('aria-label',`${fmt(year,month,d)}, ${statusLabels[s]||'Wolne'}`);const num=document.createElement('span');num.className='num';num.textContent=d;b.append(num);const note=document.createElement('span');note.className='note';note.textContent=s==='off'?'':s==='work'?(entry.start||settings.start)+'–'+(entry.end||settings.end):statusLabels[s]||'Wolne';if(note.textContent)b.append(note);if(holiday){const h=document.createElement('small');h.textContent=holiday;b.append(h)}if(entry.note){const n=document.createElement('small');n.textContent='✎ '+entry.note;b.append(n)}b.addEventListener('click',()=>openDay(key,holiday));cal.append(b)}}
+const THEME_KEY='mojGrafikTheme';
+function themeChoice(){try{return localStorage.getItem(THEME_KEY)||'auto'}catch(e){return 'auto'}}
+function applyTheme(choice){const dark=choice==='dark'||(choice==='auto'&&window.matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.dataset.theme=dark?'dark':'light';const meta=document.querySelector('meta[name="theme-color"]');if(meta)meta.content=dark?'#0b1220':'#172a4a'}
+try{window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>{if(themeChoice()==='auto')applyTheme('auto')})}catch(e){}
+applyTheme(themeChoice());
+
+const AUTH_KEY='mojGrafikLoginPinV1';
+function authConfig(){try{const x=JSON.parse(localStorage.getItem(AUTH_KEY));return x&&x.mode==='pin'&&typeof x.login==='string'&&typeof x.hash==='string'?x:{mode:'off'}}catch(e){return {mode:'off'}}}
+function authHash(login,pin,salt){let h=2166136261;for(const c of (salt+'|'+login+'|'+pin)){h^=c.charCodeAt(0);h=Math.imul(h,16777619)}return (h>>>0).toString(16)}
+function authValid(cfg,login,pin){return cfg.mode==='pin'&&login===cfg.login&&authHash(login,pin,cfg.salt)===cfg.hash}
+function updateAuthFields(){const enabled=$('authMode').value==='pin';$('authSetupFields').classList.toggle('hidden',!enabled);$('authOldPinWrap').classList.toggle('hidden',authConfig().mode!=='pin')}
+function authInit(){const cfg=authConfig();if(cfg.mode!=='pin')return;document.body.classList.add('auth-locked');$('authDialog').showModal();$('authUser').focus()}
+$('authForm').addEventListener('submit',e=>{e.preventDefault();const cfg=authConfig();if(authValid(cfg,$('authUser').value.trim(),$('authPin').value)){document.body.classList.remove('auth-locked');$('authDialog').close();$('authPin').value='';$('authError').textContent=''}else{$('authError').textContent='Nieprawidłowy login lub PIN.';$('authPin').value=''}});
+$('authMode').addEventListener('change',updateAuthFields);
+$('authForgotPin').addEventListener('click',()=>{const cfg=authConfig();const info=$('authRecoveryInfo');info.classList.remove('hidden');info.textContent=cfg.email?'Zapisany adres do przyszłego odzyskiwania: '+cfg.email+'. Ta wersja offline nie może wysłać kodu ani zresetować PIN-u. Aby uniknąć utraty danych, nie usuwaj pamięci przeglądarki.':'W tej wersji offline nie ma automatycznego resetowania PIN-u. Nie usuwaj pamięci przeglądarki, aby nie utracić zapisanych danych.';});
+function saveAuthSettings(){const old=authConfig(),mode=$('authMode').value,login=$('authLoginName').value.trim(),pin=$('authNewPin').value,confirm=$('authConfirmPin').value,email=$('authRecoveryEmail').value.trim().toLowerCase();
+ if(old.mode==='pin'&&($('authOldPin').value!==''||mode!=='pin'||login!==old.login||pin!==''||email!==(old.email||''))&&!authValid(old,old.login,$('authOldPin').value)){alert('Wpisz prawidłowy dotychczasowy PIN.');return false}
+ if(mode==='off'){localStorage.removeItem(AUTH_KEY);return true}
+ if(!login){alert('Wpisz login.');return false}
+ if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){alert('Wpisz poprawny adres e-mail. Jest wymagany przy logowaniu login + PIN. Pamiętaj, że odzyskiwanie e-mail nie jest jeszcze dostępne offline.');return false}
+ if(old.mode==='pin'&&login===old.login&&pin==='' ){try{localStorage.setItem(AUTH_KEY,JSON.stringify({...old,email}));return true}catch(e){alert('Nie udało się zapisać adresu e-mail.');return false}}
+ if(!/^\d{4}$/.test(pin)||pin!==confirm){alert('PIN musi mieć dokładnie 4 cyfry i zgadzać się z potwierdzeniem.');return false}
+ const salt=Array.from(crypto.getRandomValues(new Uint8Array(12)),x=>x.toString(16).padStart(2,'0')).join('');
+ try{localStorage.setItem(AUTH_KEY,JSON.stringify({mode:'pin',login,email,salt,hash:authHash(login,pin,salt)}));return true}catch(e){alert('Nie udało się zapisać ustawień logowania.');return false}
+}
+function setup(){const s=data.settings;const a=authConfig();$('authMode').value=a.mode;$('authLoginName').value=a.login||'';$('authRecoveryEmail').value=a.email||'';$('authNewPin').value='';$('authConfirmPin').value='';$('authOldPin').value='';updateAuthFields();$('themeSelect').value=themeChoice();$('nameInput').value=s.name;$('limitInput').value=s.limit;$('startDefault').value=s.start;$('endDefault').value=s.end;$('weekChecks').replaceChildren();names.forEach((n,i)=>{const l=document.createElement('label'),input=document.createElement('input');input.type='checkbox';input.value=(i+1)%7;input.checked=s.weekdays.includes((i+1)%7);l.append(input,document.createTextNode(n));$('weekChecks').append(l)});$('setupDialog').showModal()}
+function openDay(key,holiday){selected=key;const [y,m,d]=key.split('-').map(Number);$('dayTitle').textContent=fmt(y,m-1,d);const entry=data.days[key]||{};$('dayStatus').value=entry.status||'auto';updateSaturdaySource();$('dayStart').value=entry.start||data.settings.start;$('dayEnd').value=entry.end||data.settings.end;$('dayNote').value=entry.note||'';$('leavePartialHours').value=entry.leaveMinutes==null?'':String(entry.leaveMinutes/60);$('leaveWorkOverride').checked=entry.leaveScheduled===true;$('holidayNote').textContent=holiday?`Święto: ${holiday}. Możesz ręcznie zmienić status tego dnia.`:'';$('inlineEditor').classList.add('hidden');updateDayPreview();$('dayDialog').showModal()}
+$('saveSettings').onclick=()=>{const limit=Number($('limitInput').value);if(!Number.isInteger(limit)||limit<0||limit>365){alert('Podaj poprawny roczny wymiar urlopu (0–365).');return}if(!saveAuthSettings())return;const weekdays=[...$('weekChecks').querySelectorAll('input:checked')].map(x=>Number(x.value));data.settings={name:$('nameInput').value.trim(),limit,weekdays,start:$('startDefault').value||'08:00',end:$('endDefault').value||'16:00'};if(persist()){try{localStorage.setItem(THEME_KEY,$('themeSelect').value)}catch(e){}applyTheme($('themeSelect').value);$('setupDialog').close();render()}};
+$('saveDay').onclick=()=>{
+ const status=$('dayStatus').value,start=$('dayStart').value,end=$('dayEnd').value,note=$('dayNote').value.trim();
+ if(status==='work'&&(!start||!end||start===end)){alert('Dla pracy podaj różne godziny rozpoczęcia i zakończenia.');return}
+  const isLeave=status==='vacation'||status==='demand';const shift=minutesBetween(start,end);
+  if(isLeave&&!shift){alert('Dla urlopu podaj poprawne godziny planowanej zmiany (różne godziny od i do).');return}
+ let leaveMinutes=null;
+ if(isLeave){
+  const raw=$('leavePartialHours').value.trim();
+  if(raw!==''){
+   const h=Number(raw);if(!Number.isFinite(h)||h<=0||h*60>shift||!Number.isInteger(h*60)){alert('Godziny urlopu muszą być większe od zera i nie mogą przekraczać długości zmiany.');return}
+   leaveMinutes=Math.round(h*60);
+  }
+ }
+ if(status==='saturday_comp'){
+  const source=$('saturdaySource').value;
+  if(!source){alert('Brak święta sobotniego w tym roku.');return}
+  const duplicate=Object.entries(data.days).find(([key,e])=>key!==selected&&e.status==='saturday_comp'&&e.compensates===source);
+  if(duplicate){alert('Za to święto wpisano już dzień wolny: '+duplicate[0]);return}
+  if(!confirm('Czy pracodawca wyznaczył '+selected+' jako dzień wolny za święto '+source+'? Okres rozliczeniowy nie jest znany — aplikacja nie może zweryfikować terminu.'))return;
+ }
+ const existingHoliday=holidays(Number(selected.slice(0,4)))[selected];
+ if(existingHoliday&&status==='work'&&!confirm('To święto ustawowe: '+existingHoliday+'. Czy na pewno zapisać pracę w ten dzień?'))return;
+ const previous=data.days[selected];
+ if(status==='auto' &&!note)delete data.days[selected];
+ else {const item={status,start,end,note};if(isLeave){if(leaveMinutes!==null)item.leaveMinutes=leaveMinutes;if($('leaveWorkOverride').checked)item.leaveScheduled=true;}if(status==='saturday_comp')item.compensates=$('saturdaySource').value;data.days[selected]=item;}
+ if(!persist()){if(previous===undefined)delete data.days[selected];else data.days[selected]=previous;return}
+ render();$('dayDialog').close();selected='';
+};
+function updateDayPreview(){
+ const status=$('dayStatus').value,a=$('dayStart').value,b=$('dayEnd').value,mins=minutesBetween(a,b);
+ updateSaturdaySource();const leave=status==='vacation'||status==='demand';$('leaveEditorFields').classList.toggle('hidden',!leave);
+ const [selectedYear,selectedMonth,selectedDay]=selected.split('-').map(Number);
+ const exceptionalDay=Boolean(holidays(selectedYear)[selected])||!isWorkDefault(selectedYear,selectedMonth-1,selectedDay);
+ $('leaveWorkOverrideWrap').classList.toggle('hidden',!leave||!exceptionalDay);
+ if(status==='work'){$('dayShiftPreview').textContent=mins?`Czas pracy: ${formatHours(mins)} godz.${a>b?' (koniec następnego dnia)':''}`:'Podaj godziny pracy.';return;}
+ if(!leave){$('dayShiftPreview').textContent='Dla tego statusu nie naliczamy godzin urlopu wypoczynkowego.';return;}
+ const [y,m,d]=selected.split('-').map(Number);
+ const scheduled=$('leaveWorkOverride').checked||(!holidays(y)[selected]&&isWorkDefault(y,m-1,d));
+ const raw=$('leavePartialHours').value.trim();const requested=raw===''?mins:Number(raw)*60;
+ const valid=mins>0&&Number.isFinite(requested)&&requested>0&&requested<=mins&&Number.isInteger(requested);
+ if(!scheduled){$('dayShiftPreview').textContent='Ten dzień jest domyślnie wolny lub świąteczny. Aby naliczyć urlop, zaznacz pole, że był zaplanowany jako pracujący.';return;}
+ if(!valid){$('dayShiftPreview').textContent='Sprawdź godziny urlopu: muszą być większe od 0 i nie mogą przekraczać długości zmiany.';return;}
+ const rest=mins-requested;
+ $('dayShiftPreview').textContent=`Zaplanowana zmiana: ${formatHours(mins)} godz. • Urlop: ${formatHours(requested)} godz. • Pozostała część zmiany: ${formatHours(rest)} godz.${a>b?' • zmiana przez północ':''}`;
+}
+['dayStatus','dayStart','dayEnd','leavePartialHours','leaveWorkOverride'].forEach(id=>{ $(id).addEventListener('change',updateDayPreview);$(id).addEventListener('input',updateDayPreview); });
+$('resetDay').onclick=()=>{if(!selected)return;const old=data.days[selected];delete data.days[selected];if(!persist()){if(old!==undefined)data.days[selected]=old;return}render();$('dayDialog').close();selected=''};
+$('cancelDay').onclick=()=>$('dayDialog').close();
+$('inlineSave').onclick=()=>{const status=$('inlineStatus').value,start=$('inlineStart').value,end=$('inlineEnd').value,note=$('inlineNote').value.trim();if(status==='work'&&(!start||!end||start===end)){alert('Dla pracy podaj różne godziny rozpoczęcia i zakończenia. Godzina końcowa wcześniejsza od początkowej oznacza następny dzień.');return}const previous=data.days[selected];if(status==='auto'&&!note)delete data.days[selected];else data.days[selected]={status,start,end,note};if(!persist()){if(previous===undefined)delete data.days[selected];else data.days[selected]=previous;return}if(true){render();$('saveFeedback').textContent='Zapisano zmianę dla dnia '+selected+'. Możesz odświeżyć stronę, aby sprawdzić zapis.';$('saveFeedback').classList.remove('hidden')}};
+['inlineStatus','inlineStart','inlineEnd'].forEach(id=>$(id).addEventListener('change',updateShiftInfo));$('inlineCancel').onclick=()=>{$('inlineEditor').classList.add('hidden');selected=''};$('jumpMonth').replaceChildren(...Array.from({length:12},(_,i)=>{const o=document.createElement('option');o.value=String(i);o.textContent=new Intl.DateTimeFormat('pl-PL',{month:'long'}).format(new Date(2024,i,1));return o}));
+$('jumpGo').onclick=()=>{const y=Number($('jumpYear').value),m=Number($('jumpMonth').value);if(!Number.isInteger(y)||y<1900||y>9999||!Number.isInteger(m)||m<0||m>11){alert('Wpisz rok od 1900 do 9999.');return}year=y;month=m;render()};
+$('jumpYear').addEventListener('keydown',e=>{if(e.key==='Enter')$('jumpGo').click()});
+$('settingsBtn').onclick=setup;$('prev').onclick=()=>{month--;if(month<0){month=11;year--}render()};$('next').onclick=()=>{month++;if(month>11){month=0;year++}render()};$('today').onclick=()=>{year=now.getFullYear();month=now.getMonth();render()};$('backupBtn').onclick=()=>$('backupDialog').showModal();$('backupClose').onclick=()=>$('backupDialog').close();
+// Uchwyt do ostatniego folderu przechowujemy osobno w IndexedDB, nie w kopii danych.
+const BACKUP_DB='moj-grafik-backup-folder-v1',BACKUP_STORE='handles';
+function backupDB(){return new Promise((resolve,reject)=>{if(!('indexedDB' in window)){resolve(null);return}const req=indexedDB.open(BACKUP_DB,1);req.onupgradeneeded=()=>{if(!req.result.objectStoreNames.contains(BACKUP_STORE))req.result.createObjectStore(BACKUP_STORE)};req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error)})}
+async function backupFolderGet(){try{const db=await backupDB();if(!db)return null;return await new Promise(resolve=>{const tx=db.transaction(BACKUP_STORE,'readonly');const r=tx.objectStore(BACKUP_STORE).get('folder');r.onsuccess=()=>resolve(r.result||null);r.onerror=()=>resolve(null);tx.oncomplete=()=>db.close();tx.onerror=()=>db.close()})}catch{return null}}
+async function backupFolderSet(handle){try{const db=await backupDB();if(!db)return;await new Promise((resolve,reject)=>{const tx=db.transaction(BACKUP_STORE,'readwrite');tx.objectStore(BACKUP_STORE).put(handle,'folder');tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error)});db.close()}catch{/* Brak trwałego dostępu do folderu — zapis nadal działa. */}}
+async function chooseBackupFile(mode,filename){
+ const folder=await backupFolderGet();
+ const options={id:'moj-grafik-kopie',types:[{description:'Kopia zapasowa JSON',accept:{'application/json':['.json']}}],...(folder?{startIn:folder}:{})};
+ if(mode==='save')options.suggestedName=filename;else options.multiple=false;
+ try{return mode==='save'?await window.showSaveFilePicker(options):(await window.showOpenFilePicker(options))[0]}
+ catch(err){if(err?.name==='TypeError'&&folder){delete options.startIn;return mode==='save'?await window.showSaveFilePicker(options):(await window.showOpenFilePicker(options))[0]}throw err}
+}
+async function rememberBackupFolder(fileHandle){
+ if(typeof fileHandle?.getParent==='function'){try{await backupFolderSet(await fileHandle.getParent());return}catch{}}
+ // File System Access API nie udostępnia zwykle katalogu nadrzędnego pliku.
+ // Używamy więc stałego identyfikatora okna wyboru, aby przeglądarka pamiętała katalog.
+}
+async function exportData(){
+ const filename=`moj-grafik-kopia-${dateKey(new Date().getFullYear(),new Date().getMonth(),new Date().getDate())}.json`;
+ const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+ if(typeof window.showSaveFilePicker==='function'){
+  try{const handle=await chooseBackupFile('save',filename);const writable=await handle.createWritable();await writable.write(blob);await writable.close();await rememberBackupFolder(handle);alert('Kopia została zapisana w wybranym miejscu.');return}
+  catch(err){if(err?.name==='AbortError')return;alert('Nie udało się zapisać kopii przez okno wyboru pliku. Spróbuję pobrać ją standardowo.')}
+ }
+ const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=filename;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+$('exportBtn').onclick=exportData;$('backupExport').onclick=exportData;
+async function startImport(){
+ if(typeof window.showOpenFilePicker==='function'){
+  try{const handle=await chooseBackupFile('open');const file=await handle.getFile();await rememberBackupFolder(handle);await importBackupFile(file);return}
+  catch(err){if(err?.name==='AbortError')return;alert('Nie udało się otworzyć pliku przez okno wyboru. Wybierz plik standardowo.')}
+ }
+ $('importFile').click();
+}
+$('importBtn').onclick=startImport;$('backupImport').onclick=startImport;
+async function importBackupFile(f){
+ if(!f)return;if(f.size>2_000_000){alert('Plik jest zbyt duży.');return}
+ try{const x=JSON.parse(await f.text());if(!x||x.version!==1||!x.settings||!Array.isArray(x.settings.weekdays)||!x.days||typeof x.days!=='object'||Array.isArray(x.days)||!Number.isInteger(x.settings.limit)){throw Error('Nieprawidłowa struktura kopii')}
+ if(!confirm('Wczytanie kopii ZASTĄPI wszystkie obecne dane. Kontynuować?'))return;
+ const previous=data;data=x;if(!persist()){data=previous;return}$('backupDialog').close();localStorage.removeItem(HISTORY_KEY);localStorage.removeItem(BULK_UNDO_KEY);updateBulkUndoButton();render();alert('Kopia została wczytana.')}
+ catch(err){alert('Nie udało się wczytać kopii: '+err.message)}
+}
+$('importFile').onchange=async e=>{const f=e.target.files?.[0];e.target.value='';await importBackupFile(f)};
+// Kopiowanie grafiku: przygotowanie podglądu nie zmienia danych.
+let copyMode='days', pendingCopy=[];
+const dateParts=k=>{const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(k||'');if(!m)return null;const d=new Date(Number(m[1]),Number(m[2])-1,Number(m[3]));return d.getFullYear()===Number(m[1])&&d.getMonth()+1===Number(m[2])&&d.getDate()===Number(m[3])?d:null};
+const keyOfDate=d=>dateKey(d.getFullYear(),d.getMonth(),d.getDate());
+const plusDays=(d,n)=>new Date(d.getFullYear(),d.getMonth(),d.getDate()+n);
+const mondayOf=d=>plusDays(d,-((d.getDay()+6)%7));
+const absenceStatuses=new Set(['vacation','demand','sick','unpaid','care','childcare','maternity','paternity','parental','special','force','other']);
+function effectiveWork(key){const d=dateParts(key);if(!d)return null;const e=data.days[key]||{};const h=holidays(d.getFullYear())[key];const status=getStatus(d.getFullYear(),d.getMonth(),d.getDate(),h);return {status,start:e.start||data.settings.start,end:e.end||data.settings.end};}
+function clearCopyPreview(){pendingCopy=[];$('copyApply').disabled=true;$('copyPreview').textContent='Wybierz daty i kliknij „Pokaż podgląd”.'}
+function setCopyMode(mode){copyMode=mode;$('modeDays').setAttribute('aria-pressed',String(mode==='days'));$('modeWeek').setAttribute('aria-pressed',String(mode==='week'));$('copyDaysPane').classList.toggle('hidden',mode!=='days');$('copyWeekPane').classList.toggle('hidden',mode!=='week');clearCopyPreview()}
+function renderCopyDays(){const grid=$('copyDayGrid');grid.replaceChildren();const count=new Date(year,month+1,0).getDate();for(let d=1;d<=count;d++){const key=dateKey(year,month,d),lab=document.createElement('label'),input=document.createElement('input'),txt=document.createElement('span');input.type='checkbox';input.value=key;input.addEventListener('change',clearCopyPreview);txt.textContent=String(d);lab.append(input,txt);grid.append(lab)}}
+function sourceInfo(){const key=$('copySource').value,e=effectiveWork(key);$('copySourceHours').value=e?(e.status==='work'?`${e.start}–${e.end}`:`${statusLabels[e.status]||'Wolne'} — nie jest dniem pracy`):'Wybierz datę';clearCopyPreview()}
+function openCopyDialog(){const key=dateKey(year,month,Math.min(now.getDate(),new Date(year,month+1,0).getDate()));$('copySource').value=key;$('copyWeekSource').value=key;$('copyWeekTarget').value=keyOfDate(plusDays(mondayOf(dateParts(key)),7));$('copyOverwrite').checked=false;renderCopyDays();setCopyMode('days');sourceInfo();$('copyDialog').showModal()}
+$('openCopy').onclick=openCopyDialog;
+$('modeDays').onclick=()=>setCopyMode('days');$('modeWeek').onclick=()=>setCopyMode('week');
+$('copySource').onchange=sourceInfo;
+['copyWeekSource','copyWeekTarget','copyOverwrite'].forEach(id=>$(id).addEventListener('change',clearCopyPreview));
+$('copyCancel').onclick=()=>$('copyDialog').close();
+function previewCopy(){let candidates=[];const overwrite=$('copyOverwrite').checked;
+ if(copyMode==='days'){
+  const src=$('copySource').value,e=effectiveWork(src);if(!e||e.status!=='work'||!minutesBetween(e.start,e.end)){alert('Wybierz dzień źródłowy ze statusem Praca i prawidłowymi godzinami.');return}
+  const keys=[...$('copyDayGrid').querySelectorAll('input:checked')].map(x=>x.value).filter(k=>k!==src);if(!keys.length){alert('Zaznacz co najmniej jeden inny dzień docelowy.');return}
+  candidates=keys.map(key=>({key,item:{status:'work',start:e.start,end:e.end,note:''},desc:`Praca ${e.start}–${e.end}`}));
+ }else{
+  const src=dateParts($('copyWeekSource').value),target=dateParts($('copyWeekTarget').value);if(!src||!target){alert('Wybierz poprawne daty obu tygodni.');return}
+  if(target.getDay()!==1){alert('Data docelowa musi przypadać w poniedziałek.');return}
+  const monday=mondayOf(src);for(let i=0;i<7;i++){const from=keyOfDate(plusDays(monday,i)),key=keyOfDate(plusDays(target,i));if(from===key)continue;const e=effectiveWork(from);if(!e||!['work','off'].includes(e.status))continue;const item=e.status==='work'?{status:'work',start:e.start,end:e.end,note:''}:{status:'off',start:e.start,end:e.end,note:''};candidates.push({key,item,desc:e.status==='work'?`Praca ${e.start}–${e.end}`:'Wolne'})}
+ }
+ let skipped=0;pendingCopy=[];
+ for(const candidate of candidates){const existing=data.days[candidate.key];if(existing&&(absenceStatuses.has(existing.status)||(!overwrite))){skipped++;continue}pendingCopy.push(candidate)}
+ const lines=pendingCopy.map(x=>`${x.key}: ${x.desc}`);$('copyPreview').textContent=`Do zapisania: ${pendingCopy.length} dni. Pominięto: ${skipped}.\n`+(lines.length?lines.join('\n'):'Brak dni do zapisania.');$('copyApply').disabled=pendingCopy.length===0;
+}
+$('copyPreviewBtn').onclick=previewCopy;
+$('copyApply').onclick=()=>{if(!pendingCopy.length)return;const count=pendingCopy.length;if(!confirm(`Zapisać grafik dla ${count} dni? Zmiany zastąpią wskazane wpisy zgodnie z podglądem.`))return;const before={};for(const {key,item} of pendingCopy){before[key]=data.days[key];data.days[key]={...item}}if(!persist()){for(const {key} of pendingCopy){if(before[key]===undefined)delete data.days[key];else data.days[key]=before[key]}return}recordOperation('Kopiowanie grafiku',new Map(Object.entries(before)),pendingCopy.map(x=>x.key));render();$('copyDialog').close();pendingCopy=[];alert(`Zapisano grafik dla ${count} dni. Możesz wyeksportować kopię danych JSON.`)};
+
+
+// Szablony są osobnymi ustawieniami, nie modyfikują wpisów kalendarza.
+const TEMPLATE_KEY='moj-grafik-urlopy-szablony-v1';
+const templateFields=['cycleWeeks','cyclePattern','cycleMorningStart','cycleMorningEnd','cycleAfternoonStart','cycleAfternoonEnd','cycleNightStart','cycleNightEnd'];
+function readTemplates(){
+ try{const x=JSON.parse(localStorage.getItem(TEMPLATE_KEY));return Array.isArray(x)?x.filter(t=>t&&typeof t.name==='string'&&t.values&&typeof t.values==='object'&&Array.isArray(t.weekdays)):[]}catch(e){return []}
+}
+function writeTemplates(x){try{localStorage.setItem(TEMPLATE_KEY,JSON.stringify(x));return true}catch(e){alert('Nie można zapisać szablonów w pamięci przeglądarki.');return false}}
+function refreshTemplates(selected=''){
+ const list=$('cycleTemplateList');list.replaceChildren();
+ const placeholder=document.createElement('option');placeholder.value='';placeholder.textContent='— wybierz szablon —';list.append(placeholder);
+ readTemplates().forEach(t=>{const option=document.createElement('option');option.value=t.name;option.textContent=t.name;list.append(option)});
+ list.value=selected;
+}
+function snapshotTemplate(){
+ const values={};templateFields.forEach(id=>values[id]=$(id).value);
+ return {values,weekdays:[...$('cycleWeekdays').querySelectorAll('input:checked')].map(x=>Number(x.value))};
+}
+$('cycleTemplateSave').onclick=()=>{
+ const name=$('cycleTemplateName').value.trim();
+ if(!name){alert('Wpisz nazwę szablonu.');return}
+ if(name.length>60){alert('Nazwa jest za długa.');return}
+ const current=readTemplates(),existing=current.findIndex(t=>t.name.toLocaleLowerCase('pl')===name.toLocaleLowerCase('pl'));
+ if(existing>=0&&!confirm('Szablon o tej nazwie już istnieje. Zastąpić jego ustawienia?'))return;
+ const next={name,...snapshotTemplate()};
+ if(existing>=0)current[existing]=next;else current.push(next);
+ if(writeTemplates(current)){refreshTemplates(name);alert('Szablon został zapisany.')}
+};
+$('cycleTemplateLoad').onclick=()=>{
+ const name=$('cycleTemplateList').value,t=readTemplates().find(x=>x.name===name);
+ if(!t){alert('Wybierz zapisany szablon.');return}
+ for(const id of templateFields){if(typeof t.values[id]==='string')$(id).value=t.values[id]}
+ const weekdays=new Set(t.weekdays);
+ $('cycleWeekdays').querySelectorAll('input').forEach(input=>{input.checked=weekdays.has(Number(input.value))});
+ $('cycleTemplateName').value=t.name;clearCycle();alert('Szablon wczytany. Wybierz datę początkową, sprawdź podgląd i dopiero wtedy zapisz grafik.');
+};
+$('cycleTemplateDelete').onclick=()=>{
+ const name=$('cycleTemplateList').value;if(!name){alert('Wybierz szablon do usunięcia.');return}
+ if(!confirm(`Usunąć szablon „${name}”? Nie zmieni to zapisanego grafiku.`))return;
+ if(writeTemplates(readTemplates().filter(t=>t.name!==name))){refreshTemplates();$('cycleTemplateName').value=''}
+};
+$('cycleTemplateList').onchange=()=>{$('cycleTemplateName').value=$('cycleTemplateList').value};
+
+// Generator tygodniowego grafiku cyklicznego. Zapis wyłącznie po podglądzie i potwierdzeniu.
+let pendingCycle=[];
+const cycleTypes={morning:'Poranna',afternoon:'Popołudniowa',night:'Nocna'};
+function clearCycle(){pendingCycle=[];$('cycleApply').disabled=true;$('cyclePreview').textContent='Ustaw cykl i kliknij „Pokaż podgląd”.'}
+function openCycle(){
+ const first=mondayOf(new Date(year,month,1));
+ $('cycleStart').value=keyOfDate(first);$('cycleWeeks').value=4;$('cycleOverwrite').checked=false;
+ const box=$('cycleWeekdays');box.replaceChildren();
+ names.forEach((name,i)=>{const day=(i+1)%7,label=document.createElement('label'),check=document.createElement('input');check.type='checkbox';check.value=day;check.checked=data.settings.weekdays.includes(day);label.append(check,document.createTextNode(name));box.append(label)});
+ clearCycle();refreshTemplates();$('cycleDialog').showModal();
+}
+$('openCycle').onclick=openCycle;
+$('cycleCancel').onclick=()=>$('cycleDialog').close();
+['cycleStart','cycleWeeks','cyclePattern','cycleMorningStart','cycleMorningEnd','cycleAfternoonStart','cycleAfternoonEnd','cycleNightStart','cycleNightEnd','cycleOverwrite'].forEach(id=>$(id).addEventListener('change',clearCycle));
+$('cycleWeekdays').addEventListener('change',clearCycle);
+function previewCycle(){
+ clearCycle();
+ const first=dateParts($('cycleStart').value),weeks=Number($('cycleWeeks').value);
+ if(!first||first.getDay()!==1){alert('Wybierz poniedziałek jako początek cyklu.');return}
+ if(!Number.isInteger(weeks)||weeks<1||weeks>26){alert('Podaj liczbę tygodni od 1 do 26.');return}
+ const pattern=$('cyclePattern').value.split(',');
+ const hours={morning:[$('cycleMorningStart').value,$('cycleMorningEnd').value],afternoon:[$('cycleAfternoonStart').value,$('cycleAfternoonEnd').value],night:[$('cycleNightStart').value,$('cycleNightEnd').value]};
+ for(const type of pattern){const [start,end]=hours[type];if(!start||!end||!minutesBetween(start,end)){alert('Podaj prawidłowe godziny dla zmiany: '+cycleTypes[type]);return}}
+ const weekdays=new Set([...$('cycleWeekdays').querySelectorAll('input:checked')].map(x=>Number(x.value)));
+ if(!weekdays.size){alert('Zaznacz przynajmniej jeden dzień pracy.');return}
+ const overwrite=$('cycleOverwrite').checked,lines=[];let skipped=0,holidaysSkipped=0;
+ for(let w=0;w<weeks;w++){
+  const type=pattern[w%pattern.length],[start,end]=hours[type];
+  let weekCount=0;
+  for(let i=0;i<7;i++){
+   const d=plusDays(first,w*7+i),key=keyOfDate(d),existing=data.days[key],holiday=holidays(d.getFullYear())[key];
+   if(existing&&absenceStatuses.has(existing.status)){skipped++;continue}
+   if(existing&&!overwrite){skipped++;continue}
+   if(holiday&&!existing){holidaysSkipped++;continue}
+   const work=weekdays.has(d.getDay());
+   pendingCycle.push({key,item:work?{status:'work',start,end,note:''}:{status:'off',start,end,note:''}});
+   weekCount++;
+  }
+  lines.push(`${keyOfDate(plusDays(first,w*7))}: ${cycleTypes[type]} ${start}–${end} • ${weekCount} dni do zapisania`);
+ }
+ $('cyclePreview').textContent=`Do zapisania: ${pendingCycle.length} dni. Pominięto istniejące wpisy i nieobecności: ${skipped}; święta bez wpisu: ${holidaysSkipped}.\n`+lines.join('\n');
+ $('cycleApply').disabled=!pendingCycle.length;
+}
+$('cyclePreviewBtn').onclick=previewCycle;
+$('cycleApply').onclick=()=>{
+ if(!pendingCycle.length)return;
+ if(!confirm(`Zapisać grafik cykliczny dla ${pendingCycle.length} dni?`))return;
+ const old={};
+ for(const {key,item} of pendingCycle){old[key]=data.days[key];data.days[key]={...item}}
+ if(!persist()){for(const {key} of pendingCycle){if(old[key]===undefined)delete data.days[key];else data.days[key]=old[key]}return}
+ const count=pendingCycle.length;recordOperation('Grafik cykliczny',new Map(Object.entries(old)),pendingCycle.map(x=>x.key));pendingCycle=[];render();$('cycleDialog').close();alert(`Zapisano grafik cykliczny dla ${count} dni. Warto pobrać kopię JSON.`);
+};
+
+
+// Historia maksymalnie 20 operacji. Bezpieczeństwo: cofanie tylko przy zgodności stanu dni.
+const BULK_UNDO_KEY='moj-grafik-urlopy-ostatnia-zmiana-v13';
+const HISTORY_KEY='moj-grafik-urlopy-historia-v14';
+function cloneEntry(x){return x===undefined?null:JSON.parse(JSON.stringify(x))}
+function getHistory(){
+ try{const h=JSON.parse(localStorage.getItem(HISTORY_KEY));return Array.isArray(h)?h.filter(x=>x&&Array.isArray(x.changes)&&x.changes.length&&typeof x.id==='string').slice(0,20):[]}catch(e){return []}
+}
+function saveHistory(h){try{localStorage.setItem(HISTORY_KEY,JSON.stringify(h.slice(0,20)));return true}catch(e){alert('Brak miejsca na zapis historii. Dane grafiku zapisano — wykonaj kopię JSON.');return false}}
+function recordOperation(label,previous,keys){
+ const changes=keys.map(key=>({key,before:cloneEntry(previous.get(key)),after:cloneEntry(data.days[key])})).filter(x=>JSON.stringify(x.before)!==JSON.stringify(x.after));
+ if(!changes.length)return;
+ const h=getHistory();
+ h.unshift({id:`${Date.now()}-${Math.random().toString(36).slice(2)}`,at:new Date().toISOString(),label,changes});
+ saveHistory(h);updateBulkUndoButton();
+}
+function canUndo(entry){return entry.changes.every(x=>JSON.stringify(cloneEntry(data.days[x.key]))===JSON.stringify(x.after))}
+function undoHistory(id){
+ const history=getHistory(),index=history.findIndex(x=>x.id===id);
+ if(index<0)return;
+ const entry=history[index];
+ if(!canUndo(entry)){alert('Nie można bezpiecznie cofnąć tej operacji: co najmniej jeden dzień został później zmieniony.');return}
+ if(!confirm(`Przywrócić ${entry.changes.length} dni z operacji „${entry.label}”?`))return;
+ const old=new Map(entry.changes.map(x=>[x.key,cloneEntry(data.days[x.key])]));
+ for(const x of entry.changes){if(x.before===null)delete data.days[x.key];else data.days[x.key]=cloneEntry(x.before)}
+ if(!persist()){for(const [key,item] of old){if(item===null)delete data.days[key];else data.days[key]=item}return}
+ history.splice(index,1);saveHistory(history);updateBulkUndoButton();render();renderHistory();
+ alert(`Przywrócono ${entry.changes.length} dni.`);
+}
+function describeHistoryDay(entry){
+ if(!entry)return 'Domyślny grafik (bez indywidualnego wpisu)';
+ const st=entry.status||'auto';
+ if(st==='work')return `Praca ${entry.start||'—'}–${entry.end||'—'}`;
+ if(st==='off')return 'Wolne';
+ if(st==='vacation')return 'Urlop wypoczynkowy';
+ if(st==='demand')return 'Urlop na żądanie';
+ return statusLabels[st]||st;
+}
+$('historyFilter').oninput=renderHistory;
+function renderHistory(){
+ const el=$('historyEntries');el.replaceChildren();
+ const filter=$('historyFilter').value.trim().toLocaleLowerCase('pl');
+ const h=getHistory().filter(entry=>!filter||entry.label.toLocaleLowerCase('pl').includes(filter)||entry.changes.some(x=>x.key.includes(filter)));
+ if(!h.length){el.textContent=filter?'Brak operacji spełniających filtr.':'Brak zapisanych operacji.';return}
+ for(const entry of h){
+  const box=document.createElement('div');box.style.cssText='border-bottom:1px solid #ccd5e3;padding:12px 0';
+  const heading=document.createElement('strong');heading.textContent=entry.label;
+  const meta=document.createElement('p');meta.className='muted';
+  const dates=entry.changes.map(x=>x.key).sort();
+  const time=new Date(entry.at);meta.textContent=`${Number.isNaN(time.getTime())?'Data nieznana':time.toLocaleString('pl-PL')} • ${dates.length} dni • ${dates[0]} – ${dates[dates.length-1]}`;
+  const details=document.createElement('details');details.style.margin='8px 0';
+  const summary=document.createElement('summary');summary.textContent='Pokaż zmienione dni i godziny';details.append(summary);
+  const list=document.createElement('div');list.style.cssText='max-height:220px;overflow:auto;margin-top:8px';
+  for(const x of entry.changes){
+   const item=document.createElement('div');item.style.cssText='padding:6px 0;border-bottom:1px solid #e6eaf0;font-size:13px';
+   item.textContent=`${x.key}: ${describeHistoryDay(x.before)} → ${describeHistoryDay(x.after)}`;
+   list.append(item);
+  }
+  details.append(list);
+  const btn=document.createElement('button');btn.textContent='Przywróć ten grafik';btn.disabled=!canUndo(entry);
+  if(btn.disabled){
+   btn.title='Dni zmieniono po tej operacji';
+   const note=document.createElement('p');note.className='muted';note.textContent='Przywrócenie niedostępne: co najmniej jeden dzień został później zmieniony.';
+   box.append(heading,meta,details,note,btn);
+  }else box.append(heading,meta,details,btn);
+  btn.onclick=()=>undoHistory(entry.id);
+  el.append(box);
+ }
+}
+function updateBulkUndoButton(){
+ const h=getHistory().find(x=>x.label.startsWith('Edycja zakresu'));
+ $('undoBulk').disabled=!h||!canUndo(h);
+ $('undoBulk').title=h?'Cofnij najnowszą operację zbiorczej edycji':'Brak operacji do cofnięcia';
+}
+$('undoBulk').onclick=()=>{
+ const h=getHistory().find(x=>x.label.startsWith('Edycja zakresu'));
+ if(h)undoHistory(h.id);
+};
+$('showHistory').onclick=()=>{renderHistory();$('historyDialog').showModal()};
+$('historyClose').onclick=()=>$('historyDialog').close();
+function migrateUndoV13(){
+ try{
+  const old=JSON.parse(localStorage.getItem(BULK_UNDO_KEY));
+  if(old&&Array.isArray(old.changes)&&old.changes.length&&!getHistory().length){
+   saveHistory([{id:`migration-${Date.now()}`,at:new Date().toISOString(),label:'Edycja zakresu (v1.3)',changes:old.changes}]);
+  }
+ }catch(e){}
+ localStorage.removeItem(BULK_UNDO_KEY);
+}
+migrateUndoV13();updateBulkUndoButton();
+
+// Zbiorcza edycja: tylko statusy work/off, brak ingerencji w nieobecności.
+let pendingBulk=[];
+function resetBulkPreview(){pendingBulk=[];$('bulkApply').disabled=true;$('bulkPreview').textContent='Wybierz daty i pokaż podgląd.'}
+function bulkActionVisibility(){$('bulkHours').classList.toggle('hidden',$('bulkAction').value!=='work');resetBulkPreview()}
+$('openBulk').onclick=()=>{
+ const from=new Date(year,month,1),to=new Date(year,month+1,0);
+ $('bulkFrom').value=keyOfDate(from);$('bulkTo').value=keyOfDate(to);
+ $('bulkAction').value='work';$('bulkStart').value=data.settings.start;$('bulkEnd').value=data.settings.end;
+ $('bulkOverwrite').checked=false;
+ const holder=$('bulkWeekdays');holder.replaceChildren();
+ names.forEach((name,i)=>{const d=(i+1)%7,label=document.createElement('label'),input=document.createElement('input');input.type='checkbox';input.value=d;input.checked=data.settings.weekdays.includes(d);label.append(input,document.createTextNode(name));holder.append(label)});
+ bulkActionVisibility();$('bulkDialog').showModal();
+};
+$('bulkCancel').onclick=()=>$('bulkDialog').close();
+$('bulkAction').onchange=bulkActionVisibility;
+['bulkFrom','bulkTo','bulkStart','bulkEnd','bulkOverwrite'].forEach(id=>$(id).addEventListener('change',resetBulkPreview));
+$('bulkWeekdays').addEventListener('change',resetBulkPreview);
+$('bulkPreviewBtn').onclick=()=>{
+ resetBulkPreview();
+ const from=dateParts($('bulkFrom').value),to=dateParts($('bulkTo').value),action=$('bulkAction').value,overwrite=$('bulkOverwrite').checked;
+ if(!from||!to||from>to){alert('Wybierz poprawny zakres dat.');return}
+ const days=Math.round((Date.UTC(to.getFullYear(),to.getMonth(),to.getDate())-Date.UTC(from.getFullYear(),from.getMonth(),from.getDate()))/86400000)+1;
+ if(days>366){alert('Jednorazowo możesz zmienić maksymalnie 366 dni.');return}
+ const weekdays=new Set([...$('bulkWeekdays').querySelectorAll('input:checked')].map(x=>Number(x.value)));
+ if(!weekdays.size){alert('Zaznacz przynajmniej jeden dzień tygodnia.');return}
+ const start=$('bulkStart').value,end=$('bulkEnd').value;
+ if(action==='work'&&(!start||!end||!minutesBetween(start,end))){alert('Podaj różne, poprawne godziny pracy.');return}
+ let protectedCount=0,existingCount=0,holidayCount=0,emptyCount=0;
+ const preview=[];
+ for(let i=0;i<days;i++){
+  const date=plusDays(from,i),key=keyOfDate(date);
+  if(!weekdays.has(date.getDay()))continue;
+  const existing=data.days[key];
+  if(existing&&absenceStatuses.has(existing.status)){protectedCount++;continue}
+  if(existing&&existing.status!=='work'&&existing.status!=='off'){protectedCount++;continue}
+  if(action==='clear'){
+   if(!existing){emptyCount++;continue}
+   pendingBulk.push({key,item:null});
+  }else{
+   if(existing&&!overwrite){existingCount++;continue}
+   if(!existing&&holidays(date.getFullYear())[key]){holidayCount++;continue}
+   pendingBulk.push({key,item:action==='work'?{status:'work',start,end,note:existing?.note||''}:{status:'off',start:'',end:'',note:existing?.note||''}});
+  }
+  if(preview.length<12)preview.push(`${key} — ${action==='clear'?'Przywróć domyślny grafik':action==='off'?'Wolne':`Praca ${start}–${end}`}`);
+ }
+ $('bulkPreview').textContent=`Do zmiany: ${pendingBulk.length} dni.\nChronione nieobecności/inne wpisy: ${protectedCount}. Pominięte istniejące wpisy: ${existingCount}. Pominięte święta: ${holidayCount}. Bez wpisu do usunięcia: ${emptyCount}.\n`+preview.join('\n')+(pendingBulk.length>12?`\n… i jeszcze ${pendingBulk.length-12} dni.`:'');
+ $('bulkApply').disabled=!pendingBulk.length;
+};
+$('bulkApply').onclick=()=>{
+ if(!pendingBulk.length)return;
+ if(!confirm(`Zatwierdzić zmiany w ${pendingBulk.length} dniach? Przed większymi zmianami warto wykonać kopię JSON.`))return;
+ const previous=new Map(pendingBulk.map(({key})=>[key,data.days[key]]));
+ for(const {key,item} of pendingBulk){if(item===null)delete data.days[key];else data.days[key]={...item}}
+ if(!persist()){for(const [key,item] of previous){if(item===undefined)delete data.days[key];else data.days[key]=item}return}
+ const count=pendingBulk.length;
+ recordOperation('Edycja zakresu',previous,pendingBulk.map(x=>x.key));
+ pendingBulk=[];render();$('bulkDialog').close();alert(`Zapisano zmiany dla ${count} dni.`);
+};
+
+
+// Rejestr nieobecności i eksport CSV; nie modyfikuje zapisanych danych.
+const absenceKinds=['vacation','demand','sick','unpaid','care','childcare','maternity','paternity','parental','special','force','other'];
+function getAbsenceRows(){
+ const selectedYear=$('absenceYear').value,filter=$('absenceFilter').value,hs=holidays(Number(selectedYear));
+ return Object.entries(data.days).filter(([key,e])=>key.startsWith(selectedYear+'-')&&e&&absenceKinds.includes(e.status)&&(filter==='all'||filter===e.status)).sort((a,b)=>a[0].localeCompare(b[0])).map(([key,e])=>({
+  date:key,status:e.status,label:statusLabels[e.status]||e.status,
+  minutes:['vacation','demand'].includes(e.status)?plannedMinutesForLeave(key,hs):null,
+  note:e.note||''
+ }));
+}
+function refreshAbsenceYears(){
+ const select=$('absenceYear'),previous=select.value;
+ const years=new Set([year,...Object.keys(data.days).map(k=>Number(k.slice(0,4))).filter(n=>Number.isInteger(n)&&n>=1900&&n<=2200)]);
+ select.replaceChildren();
+ [...years].sort((a,b)=>b-a).forEach(y=>{const opt=document.createElement('option');opt.value=String(y);opt.textContent=String(y);select.append(opt)});
+ select.value=[...years].some(y=>String(y)===previous)?previous:String(year);
+}
+function renderAbsences(){
+ refreshAbsenceYears();
+ const rows=getAbsenceRows(),body=$('absenceRows');body.replaceChildren();
+ const totalVacation=rows.filter(r=>r.minutes!==null).reduce((a,r)=>a+r.minutes,0);
+ const demandMinutes=rows.filter(r=>r.status==='demand').reduce((a,r)=>a+(r.minutes||0),0);
+ const summary=$('absenceSummary');summary.replaceChildren();
+ for(const [title,value] of [['Wpisy nieobecności',String(rows.length)],['Urlop łącznie',formatHours(totalVacation)+' h'],['W tym na żądanie',formatHours(demandMinutes)+' h']]){
+  const box=document.createElement('div');box.className='stat';const strong=document.createElement('strong');strong.textContent=value;const label=document.createElement('span');label.textContent=title;box.append(strong,label);summary.append(box)
+ }
+ for(const r of rows){
+  const tr=document.createElement('tr');
+  for(const value of [r.date,r.label,r.minutes===null?'—':formatHours(r.minutes),r.note]){
+   const td=document.createElement('td');td.textContent=value;td.style.cssText='padding:8px;border-bottom:1px solid #e3e8ef;white-space:nowrap';tr.append(td)
+  }body.append(tr)
+ }
+ $('absenceInfo').textContent=rows.length?'':'Brak wpisów dla wybranego roku i rodzaju nieobecności.';
+}
+$('absenceYear').onchange=renderAbsences;
+$('absenceFilter').onchange=renderAbsences;
+function csvCell(v){return '"'+String(v??'').replace(/"/g,'""')+'"'}
+$('absenceCsv').onclick=()=>{
+ const rows=getAbsenceRows(),lines=[['Data','Rodzaj nieobecności','Godziny urlopu','Uwagi'],...rows.map(r=>[r.date,r.label,r.minutes===null?'':String(Math.round(r.minutes/60*100)/100).replace('.',','),r.note])];
+ const csv='\ufeff'+lines.map(line=>line.map(csvCell).join(';')).join('\r\n');
+ const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8;'}));
+ const a=document.createElement('a');a.href=url;a.download=`nieobecnosci-${$('absenceYear').value}.csv`;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)
+};
+const originalRender=render;
+render=function(){originalRender();renderAbsences()};
+renderAbsences();
+
+render();
+</script><script>
+/* Zdjęcia w IndexedDB: osobne od danych grafiku JSON, bez zmiany istniejącego klucza localStorage. */
+(function(){
+'use strict';
+const $p=id=>document.getElementById(id), DB='moj-grafik-zdjecia-v1', STORE='photos';
+let pending=null;
+$p('photoMonth').value=new Date().toISOString().slice(0,7);
+function msg(t){$p('photoMessage').textContent=t}
+function openDb(){return new Promise((resolve,reject)=>{if(!window.indexedDB){reject(new Error('Brak obsługi pamięci zdjęć w tej przeglądarce'));return}const req=indexedDB.open(DB,1);req.onupgradeneeded=()=>{const db=req.result;if(!db.objectStoreNames.contains(STORE))db.createObjectStore(STORE,{keyPath:'id'})};req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error)})}
+async function dbCall(mode,cb){const db=await openDb();try{return await new Promise((resolve,reject)=>{const tx=db.transaction(STORE,mode),store=tx.objectStore(STORE),req=cb(store);req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error);tx.onabort=()=>reject(tx.error)})}finally{db.close()}}
+const getAll=()=>dbCall('readonly',s=>s.getAll()),put=x=>dbCall('readwrite',s=>s.put(x)),remove=id=>dbCall('readwrite',s=>s.delete(id));
+function fileName(row){return 'Grafik_'+row.month+'_'+row.id.slice(-6)+'.jpg'}
+async function asJpeg(file){return new Promise((resolve,reject)=>{const img=new Image(),url=URL.createObjectURL(file);img.onload=()=>{try{const scale=Math.min(1,2200/Math.max(img.naturalWidth,img.naturalHeight)),canvas=document.createElement('canvas');canvas.width=Math.max(1,Math.round(img.naturalWidth*scale));canvas.height=Math.max(1,Math.round(img.naturalHeight*scale));canvas.getContext('2d').drawImage(img,0,0,canvas.width,canvas.height);canvas.toBlob(blob=>{URL.revokeObjectURL(url);blob?resolve(blob):reject(new Error('Nie można przygotować zdjęcia'))},'image/jpeg',.85)}catch(e){URL.revokeObjectURL(url);reject(e)}};img.onerror=()=>{URL.revokeObjectURL(url);reject(new Error('Nie można odczytać zdjęcia'))};img.src=url})}
+function download(blob,name){const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000)}
+async function saveExternal(blob,name){if(window.showSaveFilePicker){try{const h=await window.showSaveFilePicker({suggestedName:name,id:'moj-grafik-zdjecia',types:[{description:'Zdjęcie JPEG',accept:{'image/jpeg':['.jpg']}}]});const w=await h.createWritable();await w.write(blob);await w.close();return 'folder'}catch(e){if(e.name==='AbortError')return 'cancelled';msg('Nie udało się zapisać w wybranym folderze. Możesz pobrać zdjęcie z archiwum.')}}download(blob,name);return 'download'}
+function clearPending(){pending=null;$p('photoPending').classList.add('hidden');$p('cameraPhotoInput').value='';$p('galleryPhotoInput').value=''}
+async function selected(e){const file=e.target.files?.[0];if(!file)return;if(!file.type.startsWith('image/')){msg('Wybierz plik zdjęcia.');return}if(file.size>35*1024*1024){msg('Zdjęcie jest zbyt duże (maks. 35 MB).');return}pending=file;const preview=$p('photoPreview');preview.src=URL.createObjectURL(file);preview.onload=()=>URL.revokeObjectURL(preview.src);$p('photoPending').classList.remove('hidden');msg('Sprawdź zdjęcie i kliknij „Zapisz zdjęcie”.')}
+$p('takePhoto').onclick=()=>$p('cameraPhotoInput').click();$p('choosePhoto').onclick=()=>$p('galleryPhotoInput').click();$p('cameraPhotoInput').onchange=selected;$p('galleryPhotoInput').onchange=selected;$p('cancelPhoto').onclick=clearPending;
+$p('savePhoto').onclick=async()=>{if(!pending)return;const month=$p('photoMonth').value;if(!/^\d{4}-\d{2}$/.test(month)){msg('Wybierz miesiąc grafiku.');return}const btn=$p('savePhoto');btn.disabled=true;try{const blob=await asJpeg(pending),row={id:String(Date.now())+'-'+Math.random().toString(36).slice(2,8),month,note:$p('photoNote').value.trim(),created:new Date().toISOString(),blob};await put(row);clearPending();await renderPhotos();const result=await saveExternal(blob,fileName(row));msg(result==='folder'?'Zdjęcie zapisane w folderze i archiwum aplikacji.':result==='cancelled'?'Zdjęcie zapisane w archiwum aplikacji. Zapis w folderze anulowano.':'Zdjęcie zapisane w archiwum aplikacji i przekazane do pobrania.')}catch(e){msg('Nie udało się zapisać zdjęcia: '+e.message)}finally{btn.disabled=false}};
+async function renderPhotos(){const gallery=$p('photoGallery');gallery.replaceChildren();try{const rows=(await getAll()).sort((a,b)=>b.month.localeCompare(a.month)||b.created.localeCompare(a.created));if(!rows.length){const p=document.createElement('p');p.className='muted';p.textContent='Nie ma jeszcze zapisanych zdjęć.';gallery.append(p);return}rows.forEach(row=>{const card=document.createElement('div');card.className='photo-card';const img=document.createElement('img'),url=URL.createObjectURL(row.blob);img.src=url;img.alt='Grafik '+row.month;img.onload=()=>{};const title=document.createElement('strong');title.textContent='Grafik '+row.month;const note=document.createElement('p');note.className='muted';note.textContent=row.note||'Bez opisu';const actions=document.createElement('div');actions.className='actions';const view=document.createElement('button');view.textContent='Otwórz';view.onclick=()=>window.open(url,'_blank');img.onclick=view.onclick;const exportBtn=document.createElement('button');exportBtn.textContent='Zapisz plik';exportBtn.onclick=async()=>{const result=await saveExternal(row.blob,fileName(row));msg(result==='cancelled'?'Anulowano zapis pliku.':'Zapis zdjęcia rozpoczęty.')};const del=document.createElement('button');del.textContent='Usuń z aplikacji';del.onclick=async()=>{if(!confirm('Usunąć zdjęcie z archiwum aplikacji? Plik zapisany osobno w folderze pozostanie bez zmian.'))return;await remove(row.id);URL.revokeObjectURL(url);renderPhotos()};actions.append(view,exportBtn,del);card.append(img,title,note,actions);gallery.append(card)})}catch(e){msg('Nie można odczytać archiwum zdjęć: '+e.message)}}
+$p('refreshPhotos').onclick=renderPhotos;$p('tabPhotos').addEventListener('click',renderPhotos);renderPhotos();
+})();
+</script><script>authInit();</script><script>
+if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(err => console.warn('PWA offline:', err)));
+}
+</script></body></html>

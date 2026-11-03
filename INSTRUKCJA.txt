@@ -1,0 +1,9 @@
+Mój Grafik i Urlopy PWA v1.7.1 (na bazie WEB v1.6.44)
+
+Wgraj pliki index.html, manifest.webmanifest, sw.js, icon-192.png i icon-512.png do głównego katalogu repozytorium GitHub Pages. Nie wgrywaj danych osobowych ani kopii JSON.
+
+GitHub Pages (Free): repozytorium musi być publiczne, a strona będzie dostępna publicznie. Lokalny PIN nie jest serwerowym zabezpieczeniem dostępu do aplikacji.
+
+Settings > Pages > Deploy from a branch > main > /(root) > Save.
+Po publikacji otwórz adres HTTPS i wybierz instalację aplikacji w menu przeglądarki.
+Dane zapisane w poprzedniej aplikacji nie przenoszą się automatycznie na nową domenę. Zrób kopię JSON i osobno zapisz zdjęcia przed migracją.
